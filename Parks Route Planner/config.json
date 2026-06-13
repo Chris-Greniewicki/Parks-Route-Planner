@@ -1,0 +1,518 @@
+{
+  "Crews": [ "1", "2", "3", "4" ],
+  "Next Mow Event Date": "XX/XX/XXXX",
+  "Sites": [
+    {
+      "1": {
+        "Zone": "1",
+        "Park": "Harkey Park",
+        "Address": "1708 SW Douglas Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "2":{
+        "Zone": "1",
+        "Park": "James Edward Thornton Park",
+        "Address": "1308 SW Tennessee Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "3": {
+        "Zone": "1",
+        "Park": "Verna Cook Park",
+        "Address": "1208 SW Garfield Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "4": {
+        "Zone": "1",
+        "Park": "Mocine park",
+        "Address": "810 SW Roosevelt Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "5": {
+        "Zone": "1",
+        "Park": "Olson Park",
+        "Address": "1202 SW E Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "6": {
+        "Zone": "1",
+        "Park": "George M Lee Park",
+        "Address": "601 SW Belmont Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "7": {
+        "Zone": "1",
+        "Park": "Mattie Beal Park",
+        "Address": "909 SW 9th St",
+        "isLarge": false
+      }
+    },
+    {
+      "8": {
+        "Zone": "1",
+        "Park": "Waldman Park",
+        "Address": "1210 SW J Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "9": {
+        "Zone": "1",
+        "Park": "Toby Morris Park",
+        "Address": "701 SW I Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "10": {
+        "Zone": "1",
+        "Park": "Union Park",
+        "Address": "502 SW I Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "11": {
+        "Zone": "1",
+        "Park": "Patterson park",
+        "Address": "2812 SW H Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "12": {
+        "Zone": "1",
+        "Park": "Vito Baxter Puppy Promenade(Dog Park)",
+        "Address": "3200 SW Lee Blvd",
+        "isLarge": true
+      }
+    },
+    {
+      "13": {
+        "Zone": "1",
+        "Park": "Sidewalks",
+        "Address": "1300 SW Goergia Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "14": {
+        "Zone": "1",
+        "Park": "Mall Medians",
+        "Address": "600 SW F Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "15": {
+        "Zone": "2",
+        "Park": "Parklane park(J. Henderson)",
+        "Address": "1625 SE Hillcrest Rd",
+        "isLarge": false
+      }
+    },
+    {
+      "16": {
+        "Zone": "2",
+        "Park": "Sullivan Village Park",
+        "Address": "602 SE 38th St",
+        "isLarge": false
+      }
+    },
+    {
+      "17": {
+        "Zone": "2",
+        "Park": "Skyline East Park",
+        "Address": "2701 NE Bell Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "18": {
+        "Zone": "2",
+        "Park": "East Side Park",
+        "Address": "4200 E Gore Blvd",
+        "isLarge": false
+      }
+    },
+    {
+      "19": {
+        "Zone": "2",
+        "Park": "MacAruthur Park",
+        "Address": "4902 NE Euclid Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "20": {
+        "Zone": "2",
+        "Park": "Prairie Park",
+        "Address": "2101 NE Kingsbriar Dr",
+        "isLarge": false
+      }
+    },
+    {
+      "21": {
+        "Zone": "2",
+        "Park": "Garden Village Park",
+        "Address": "2705 NE Village Dr",
+        "isLarge": false
+      }
+    },
+    {
+      "22": {
+        "Zone": "2",
+        "Park": "Panther Park",
+        "Address": "3602 NE Pioneer Blvd",
+        "isLarge": false
+      }
+    },
+    {
+      "23": {
+        "Zone": "2",
+        "Park": "O.H. Arnold Park",
+        "Address": "500 NE Euclid Dr",
+        "isLarge": false
+      }
+    },
+    {
+      "24": {
+        "Zone": "2",
+        "Park": "Francis Curb Park",
+        "Address": "401 NW Woodridge Dr",
+        "isLarge": false
+      }
+    },
+    {
+      "25": {
+        "Zone": "2",
+        "Park": "Carrol Park",
+        "Address": "1236 NW Carrol Dr",
+        "isLarge": false
+      }
+    },
+    {
+      "26": {
+        "Zone": "2",
+        "Park": "Lawton Heights park",
+        "Address": "2002 NW 15th St",
+        "isLarge": false
+      }
+    },
+    {
+      "27": {
+        "Zone": "2",
+        "Park": "Flat Iron Park(North Legion)",
+        "Address": " 715 NE Carver St",
+        "isLarge": false
+      }
+    },
+    {
+      "28": {
+        "Zone": "2",
+        "Park": "2 Corners",
+        "Address": "830 NE Carver St",
+        "isLarge": false
+      }
+    },
+    {
+      "29": {
+        "Zone": "2",
+        "Park": "East Gore Median",
+        "Address": "1902 E Gore Blvd",
+        "isLarge": false
+      }
+    },
+    {
+      "30": {
+        "Zone": "3",
+        "Park": "Albert Johnson Park",
+        "Address": "2801 NW 82nd st",
+        "isLarge": false
+      }
+    },
+    {
+      "31": {
+        "Zone": "3",
+        "Park": "Hunter Hills Park",
+        "Address": "7309 NW Andrews Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "32": {
+        "Zone": "3",
+        "Park": "Gray-Warr Park",
+        "Address": "7901 NW Taylor Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "33": {
+        "Zone": "3",
+        "Park": "Great Plains Park",
+        "Address": "1711 NW 67th St",
+        "isLarge": false
+      }
+    },
+    {
+      "34": {
+        "Zone": "3",
+        "Park": "Willow Creek Park",
+        "Address": "7501 NW Willow Creek Dr",
+        "isLarge": false
+      }
+    },
+    {
+      "35": {
+        "Zone": "3",
+        "Park": "Crystal Hills Park",
+        "Address": "7714 SW Delta Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "36": {
+        "Zone": "3",
+        "Park": "Putney Park",
+        "Address": "6302 NW Elm Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "37": {
+        "Zone": "3",
+        "Park": "Lee West Park",
+        "Address": "702 NW 67th St",
+        "isLarge": false
+      }
+    },
+    {
+      "38": {
+        "Zone": "3",
+        "Park": "Wayne Gilley Park",
+        "Address": "5102 NE Cheyenne Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "39": {
+        "Zone": "3",
+        "Park": "Eva McNally Memorial Park",
+        "Address": "6541 NW Columbia Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "40": {
+        "Zone": "3",
+        "Park": "Meadowbrook Park",
+        "Address": "5003 NW Meadowbrook Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "41": {
+        "Zone": "3",
+        "Park": "Fred Bently Park",
+        "Address": "40 NW 40th St",
+        "isLarge": false
+      }
+    },
+    {
+      "42": {
+        "Zone": "3",
+        "Park": "Harold Park",
+        "Address": "1420 NW 40th St",
+        "isLarge": false
+      }
+    },
+    {
+      "43": {
+        "Zone": "3",
+        "Park": "Country Club West Park",
+        "Address": "15 NW Compass Dr",
+        "isLarge": false
+      }
+    },
+    {
+      "44": {
+        "Zone": "3",
+        "Park": "Country Club Heights Park",
+        "Address": "710 SW 45th St",
+        "isLarge": false
+      }
+    },
+    {
+      "45": {
+        "Zone": "3",
+        "Park": "Park Ridge Park",
+        "Address": "4518 SW Malcom Rd",
+        "isLarge": false
+      }
+    },
+    {
+      "46": {
+        "Zone": "3",
+        "Park": "McMahon Park Ball Fields",
+        "Address": "1602 SW 38th st",
+        "isLarge": true
+      }
+    },
+    {
+      "47": {
+        "Zone": "3",
+        "Park": "Goodyear Median",
+        "Address": "1002 SW Goodyear Blvd",
+        "isLarge": false
+      }
+    },
+    {
+      "48": {
+        "Zone": "4",
+        "Park": "Atlanta Park",
+        "Address": "1502 NW 33rd St",
+        "isLarge": false
+      }
+    },
+    {
+      "49": {
+        "Zone": "4",
+        "Park": "Baltimore Park",
+        "Address": "1603 NW 33rd St",
+        "isLarge": false
+      }
+    },
+    {
+      "50": {
+        "Zone": "4",
+        "Park": "Gooch Acres Park",
+        "Address": "3510 NW Rogers Lane",
+        "isLarge": false
+      }
+    },
+    {
+      "51": {
+        "Zone": "4",
+        "Park": "Stephens Park",
+        "Address": "1804 NW 23rd St",
+        "isLarge": false
+      }
+    },
+    {
+      "52": {
+        "Zone": "4",
+        "Park": "Patriot Park(Garfield)",
+        "Address": "2502 NW Bell Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "53": {
+        "Zone": "4",
+        "Park": "Charlie Ray Park",
+        "Address": "2220 NW Williams Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "54": {
+        "Zone": "4",
+        "Park": "Wilson park",
+        "Address": "2113 NW Columbia Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "55": {
+        "Zone": "4",
+        "Park": "33rd St Park",
+        "Address": "808 NW 33rd St",
+        "isLarge": false
+      }
+    },
+    {
+      "56": {
+        "Zone": "4",
+        "Park": "Clarence E. Soper Park",
+        "Address": "1920 NW Bell Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "57": {
+        "Zone": "4",
+        "Park": "Harmon Park",
+        "Address": "1308 NW Bell Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "58": {
+        "Zone": "4",
+        "Park": "35th Division Park",
+        "Address": "501 NE Columbia Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "59": {
+        "Zone": "4",
+        "Park": "Kathy Newcombe park",
+        "Address": "1201 NW Ferris Ave",
+        "isLarge": true
+      }
+    },
+    {
+      "60": {
+        "Zone": "4",
+        "Park": "Liberty Lake Park",
+        "Address": "1302 NW Victory Blvd",
+        "isLarge": true
+      }
+    },
+    {
+      "61": {
+        "Zone": "4",
+        "Park": "The Bridge Park",
+        "Address": "2101 SW D Ave",
+        "isLarge": false
+      }
+    },
+    {
+      "62": {
+        "Zone": "4",
+        "Park": "Greer Park(Kid's Zone)",
+        "Address": "711 NW 38th St",
+        "isLarge": true
+      }
+    },
+    {
+      "63": {
+        "Zone": "4",
+        "Park": "Tomlinson Park",
+        "Address": "700 NW 38th St",
+        "isLarge": false
+      }
+    },
+    {
+      "64": {
+        "Zone": "4",
+        "Park": "Ahlschlager Park(17th & G)",
+        "Address": "1702 SW G Ave",
+        "isLarge": true
+      }
+    }
+  ]
+}
