@@ -1,0 +1,406 @@
+{
+  "Crews": [ "1", "2", "3", "4" ],
+  "Next Mow Event Date": "XX/XX/XXXX",
+  "Zones": [
+    {
+      "1": [
+        {
+          "ID": "1",
+          "Park": "Harkey Park",
+          "Address": "1708 SW Douglas Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "2",
+          "Park": "James Edward Thornton Park",
+          "Address": "1308 SW Tennessee Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "3",
+          "Park": "Verna Cook Park",
+          "Address": "1208 SW Garfield Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "4",
+          "Park": "Mocine park",
+          "Address": "810 SW Roosevelt Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "5",
+          "Park": "Olson Park",
+          "Address": "1202 SW E Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "6",
+          "Park": "George M Lee Park",
+          "Address": "601 SW Belmont Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "7",
+          "Park": "Mattie Beal Park",
+          "Address": "909 SW 9th St",
+          "isLarge": false
+        },
+        {
+          "ID": "8",
+          "Park": "Waldman Park",
+          "Address": "1210 SW J Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "9",
+          "Park": "Toby Morris Park",
+          "Address": "701 SW I Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "10",
+          "Park": "Union Park",
+          "Address": "502 SW I Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "11",
+          "Park": "Patterson park",
+          "Address": "2812 SW H Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "12",
+          "Park": "Vito Baxter Puppy Promenade(Dog Park)",
+          "Address": "3200 SW Lee Blvd",
+          "isLarge": true
+        },
+        {
+          "ID": "13",
+          "Park": "Sidewalks",
+          "Address": "1300 SW Goergia Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "14",
+          "Park": "Mall Medians",
+          "Address": "600 SW F Ave",
+          "isLarge": false
+        }
+      ]
+    },
+    {
+      "2": [
+        {
+          "ID": "15",
+          "Park": "Parklane park(J. Henderson)",
+          "Address": "1625 SE Hillcrest Rd",
+          "isLarge": false
+        },
+        {
+          "ID": "16",
+          "Park": "Sullivan Village Park",
+          "Address": "602 SE 38th St",
+          "isLarge": false
+        },
+        {
+          "ID": "17",
+          "Park": "Skyline East Park",
+          "Address": "2701 NE Bell Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "18",
+          "Park": "East Side Park",
+          "Address": "4200 E Gore Blvd",
+          "isLarge": false
+        },
+        {
+          "ID": "19",
+          "Park": "MacAruthur Park",
+          "Address": "4902 NE Euclid Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "20",
+          "Park": "Prairie Park",
+          "Address": "2101 NE Kingsbriar Dr",
+          "isLarge": false
+        },
+        {
+          "ID": "21",
+          "Park": "Garden Village Park",
+          "Address": "2705 NE Village Dr",
+          "isLarge": false
+        },
+        {
+          "ID": "22",
+          "Park": "Panther Park",
+          "Address": "3602 NE Pioneer Blvd",
+          "isLarge": false
+        },
+        {
+          "ID": "23",
+          "Park": "O.H. Arnold Park",
+          "Address": "500 NE Euclid Dr",
+          "isLarge": false
+        },
+        {
+          "ID": "24",
+          "Park": "Francis Curb Park",
+          "Address": "401 NW Woodridge Dr",
+          "isLarge": false
+        },
+        {
+          "ID": "25",
+          "Park": "Carrol Park",
+          "Address": "1236 NW Carrol Dr",
+          "isLarge": false
+        },
+        {
+          "ID": "26",
+          "Park": "Lawton Heights park",
+          "Address": "2002 NW 15th St",
+          "isLarge": false
+        },
+        {
+          "ID": "27",
+          "Park": "Flat Iron Park(North Legion)",
+          "Address": " 715 NE Carver St",
+          "isLarge": false
+        },
+        {
+          "ID": "28",
+          "Park": "2 Corners",
+          "Address": "830 NE Carver St",
+          "isLarge": false
+        },
+        {
+          "ID": "29",
+          "Park": "East Gore Median",
+          "Address": "1902 E Gore Blvd",
+          "isLarge": false
+        }
+      ]
+    },
+    {
+      "3": [
+        {
+          "ID": "30",
+          "Park": "Albert Johnson Park",
+          "Address": "2801 NW 82nd st",
+          "isLarge": false
+        },
+        {
+          "ID": "31",
+          "Park": "Hunter Hills Park",
+          "Address": "7309 NW Andrews Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "32",
+          "Park": "Gray-Warr Park",
+          "Address": "7901 NW Taylor Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "33",
+          "Park": "Great Plains Park",
+          "Address": "1711 NW 67th St",
+          "isLarge": false
+        },
+        {
+          "ID": "34",
+          "Park": "Willow Creek Park",
+          "Address": "7501 NW Willow Creek Dr",
+          "isLarge": false
+        },
+        {
+          "ID": "35",
+          "Park": "Crystal Hills Park",
+          "Address": "7714 SW Delta Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "36",
+          "Park": "Putney Park",
+          "Address": "6302 NW Elm Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "37",
+          "Park": "Lee West Park",
+          "Address": "702 NW 67th St",
+          "isLarge": false
+        },
+        {
+          "ID": "38",
+          "Park": "Wayne Gilley Park",
+          "Address": "5102 NE Cheyenne Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "39",
+          "Park": "Eva McNally Memorial Park",
+          "Address": "6541 NW Columbia Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "40",
+          "Park": "Meadowbrook Park",
+          "Address": "5003 NW Meadowbrook Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "41",
+          "Park": "Fred Bently Park",
+          "Address": "40 NW 40th St",
+          "isLarge": false
+        },
+        {
+          "ID": "42",
+          "Park": "Harold Park",
+          "Address": "1420 NW 40th St",
+          "isLarge": false
+        },
+        {
+          "ID": "43",
+          "Park": "Country Club West Park",
+          "Address": "15 NW Compass Dr",
+          "isLarge": false
+        },
+        {
+          "ID": "44",
+          "Park": "Country Club Heights Park",
+          "Address": "710 SW 45th St",
+          "isLarge": false
+        },
+        {
+          "ID": "45",
+          "Park": "Park Ridge Park",
+          "Address": "4518 SW Malcom Rd",
+          "isLarge": false
+        },
+        {
+          "ID": "46",
+          "Park": "McMahon Park Ball Fields",
+          "Address": "1602 SW 38th st",
+          "isLarge": true
+        },
+        {
+          "ID": "47",
+          "Park": "Goodyear Median",
+          "Address": "1002 SW Goodyear Blvd",
+          "isLarge": false
+        }
+      ]
+    },
+    {
+      "4": [
+        {
+          "ID": "48",
+          "Park": "Atlanta Park",
+          "Address": "1502 NW 33rd St",
+          "isLarge": false
+        },
+        {
+          "ID": "49",
+          "Park": "Baltimore Park",
+          "Address": "1603 NW 33rd St",
+          "isLarge": false
+        },
+        {
+          "ID": "50",
+          "Park": "Gooch Acres Park",
+          "Address": "3510 NW Rogers Lane",
+          "isLarge": false
+        },
+        {
+          "ID": "51",
+          "Park": "Stephens Park",
+          "Address": "1804 NW 23rd St",
+          "isLarge": false
+        },
+        {
+          "ID": "52",
+          "Park": "Patriot Park(Garfield)",
+          "Address": "2502 NW Bell Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "53",
+          "Park": "Charlie Ray Park",
+          "Address": "2220 NW Williams Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "54",
+          "Park": "Wilson park",
+          "Address": "2113 NW Columbia Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "55",
+          "Park": "33rd St Park",
+          "Address": "808 NW 33rd St",
+          "isLarge": false
+        },
+        {
+          "ID": "56",
+          "Park": "Clarence E. Soper Park",
+          "Address": "1920 NW Bell Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "57",
+          "Park": "Harmon Park",
+          "Address": "1308 NW Bell Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "58",
+          "Park": "35th Division Park",
+          "Address": "501 NE Columbia Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "59",
+          "Park": "Kathy Newcombe park",
+          "Address": "1201 NW Ferris Ave",
+          "isLarge": true
+        },
+        {
+          "ID": "60",
+          "Park": "Liberty Lake Park",
+          "Address": "1302 NW Victory Blvd",
+          "isLarge": true
+        },
+        {
+          "ID": "61",
+          "Park": "The Bridge Park",
+          "Address": "2101 SW D Ave",
+          "isLarge": false
+        },
+        {
+          "ID": "62",
+          "Park": "Greer Park(Kid's Zone)",
+          "Address": "711 NW 38th St",
+          "isLarge": true
+        },
+        {
+          "ID": "63",
+          "Park": "Tomlinson Park",
+          "Address": "700 NW 38th St",
+          "isLarge": false
+        },
+        {
+          "ID": "64",
+          "Park": "Ahlschlager Park(17th & G)",
+          "Address": "1702 SW G Ave",
+          "isLarge": true
+        }
+      ]
+    }
+  ]
+}
