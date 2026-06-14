@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Parks_Route_Planner
 {
-    public class Zones
+    public class Zone
     {
-        public string ZoneId { get; set; }
-        public string Parks { get; set; }
+        public int ZoneId { get; set; }
+        public List<Site> Parks { get; set; }
     }
 }

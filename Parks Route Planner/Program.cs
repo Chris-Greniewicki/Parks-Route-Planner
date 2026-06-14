@@ -8,7 +8,8 @@ string filePath = Path.Combine(currentDir, "config.json");
 string jsonString = File.ReadAllText(filePath);
 
 //Need to figure out class creation before this section will work
-//config config = JsonSerializer.Deserialize<config>(jsonString);
+Config config = JsonSerializer.Deserialize<Config>(jsonString);
 
-Console.WriteLine(filePath);
-//Console.WriteLine($"Testing words: {config.Sites}");
+Console.WriteLine($"{config.Crews} Crews found");
+Console.WriteLine($"{config.NextMowEventDate} set as next mow event date");
+Console.WriteLine($"{config.Zones.Count} Zones found");
