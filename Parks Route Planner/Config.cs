@@ -7,7 +7,7 @@ namespace Parks_Route_Planner
     public class Config
     {
         public string Crews { get; set; }
-        public string Next { get; set; }
-        public string sites { get; set; }
+        public string NextMowEventDate { get; set; }
+        public string Zone { get; set; }
     }
 }

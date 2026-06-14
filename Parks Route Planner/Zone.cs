@@ -6,6 +6,5 @@ namespace Parks_Route_Planner
 {
     public class Zone
     {
-        public 
     }
 }
