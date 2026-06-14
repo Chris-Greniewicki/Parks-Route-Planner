@@ -13,3 +13,5 @@ Config config = JsonSerializer.Deserialize<Config>(jsonString);
 Console.WriteLine($"{config.Crews} Crews found");
 Console.WriteLine($"{config.NextMowEventDate} set as next mow event date");
 Console.WriteLine($"{config.Zones.Count} Zones found");
+int parkCount = config.Zones.Sum(Zone => Zone.Parks.Count);
+Console.WriteLine($"{parkCount} Parks found");
