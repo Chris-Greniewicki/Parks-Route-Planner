@@ -1,4 +1,5 @@
-﻿using Parks_Route_Planner;
+﻿using Microsoft.VisualBasic;
+using Parks_Route_Planner;
 using System;
 using System.IO;
 using System.Text.Json;
@@ -22,5 +23,7 @@ Console.WriteLine($"{Crew.Crew2} selected");
 Assignment test = new Assignment();
 test.AssignedCrew = Crew.Crew2;
 Console.WriteLine($"{test.AssignedCrew} assigned");
-//Console.WriteLine($"{}");
-//Console.WriteLine($"{}");
+Console.WriteLine($"{DateTime.Now}");
+Console.WriteLine($"{DateTime.Today.DayOfWeek}");
+DateTime startDate = DateTime.Now;
+CalendarBuilder.GenerateScheduleList(startDate);
