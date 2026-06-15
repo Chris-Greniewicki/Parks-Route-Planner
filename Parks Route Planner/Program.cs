@@ -23,7 +23,9 @@ Console.WriteLine($"{Crew.Crew2} selected");
 Assignment test = new Assignment();
 test.AssignedCrew = Crew.Crew2;
 Console.WriteLine($"{test.AssignedCrew} assigned");
+//testing DateTime struct
 Console.WriteLine($"{DateTime.Now}");
 Console.WriteLine($"{DateTime.Today.DayOfWeek}");
 DateTime startDate = DateTime.Now;
+//testing Calendar Builder
 CalendarBuilder.GenerateScheduleList(startDate);
