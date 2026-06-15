@@ -14,11 +14,16 @@ namespace Parks_Route_Planner
             Console.WriteLine(currentDate);
             while(endGeneration == false){
                 currentDate = currentDate.AddDays(1);
-                Console.WriteLine(currentDate);
+                if (currentDate.DayOfWeek == DayOfWeek.Saturday || currentDate.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    Console.WriteLine("Skipping weekend");
+                    continue;
+                }
                 if (currentDate.Year == 2027)
                 {
                     endGeneration = true;
                 }
+                Console.WriteLine(currentDate);
             }
             return list;
         }
