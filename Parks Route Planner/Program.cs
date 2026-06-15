@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Parks_Route_Planner;
+﻿using Parks_Route_Planner;
 using System;
 using System.IO;
 using System.Text.Json;
@@ -24,8 +23,11 @@ Assignment test = new Assignment();
 test.AssignedCrew = Crew.Crew2;
 Console.WriteLine($"{test.AssignedCrew} assigned");
 //testing DateTime struct
-Console.WriteLine($"{DateTime.Now}");
+Console.WriteLine($"{DateTime.Today}");
 Console.WriteLine($"{DateTime.Today.DayOfWeek}");
-DateTime startDate = DateTime.Now;
+DateTime startDate = DateTime.Today;
 //testing Calendar Builder
-CalendarBuilder.GenerateScheduleList(startDate);
+string nextMowEventDate = config.NextMowEventDate;
+DateTime.TryParse(nextMowEventDate, out DateTime result);
+Console.WriteLine(nextMowEventDate);
+CalendarBuilder.GenerateScheduleList(startDate, result);
