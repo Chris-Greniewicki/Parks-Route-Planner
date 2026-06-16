@@ -3,32 +3,25 @@ using System;
 using System.IO;
 using System.Text.Json;
 
+//locate config.json file
 string currentDir = AppContext.BaseDirectory;
 string filePath = Path.Combine(currentDir, "config.json");
+//Read and store json file
 string jsonString = File.ReadAllText(filePath);
 
+//Deserialize json file
 Config config = JsonSerializer.Deserialize<Config>(jsonString);
-
-//test of basic data retrieval
-Console.WriteLine($"{config.Crews} Crews found");
-Console.WriteLine($"{config.NextMowEventDate} set as next mow event date");
-Console.WriteLine($"{config.Zones.Count} Zones found");
-//test of ability to count parks across zones
+//count parks across zones
 int parkCount = config.Zones.Sum(Zone => Zone.Parks.Count);
-Console.WriteLine($"{parkCount} Parks found");
-//testing simple enum selection
-Console.WriteLine($"{Crew.Crew2} selected");
-//testing ability to set properties of a new object
-Assignment test = new Assignment();
-test.AssignedCrew = Crew.Crew2;
-Console.WriteLine($"{test.AssignedCrew} assigned");
-//testing DateTime struct
-Console.WriteLine($"{DateTime.Today}");
-Console.WriteLine($"{DateTime.Today.DayOfWeek}");
+//Run schedule generation
 DateTime startDate = DateTime.Today;
-//testing Calendar Builder
 string nextMowEventDate = config.NextMowEventDate;
-DateTime.TryParse(nextMowEventDate, out DateTime result);
-Console.WriteLine(nextMowEventDate);
-List<ScheduleDay> list = CalendarBuilder.GenerateScheduleList(startDate, result);
-Console.WriteLine(list.Count);
+bool boolResult = DateTime.TryParse(nextMowEventDate, out DateTime result);
+if (boolResult)
+{
+    List<ScheduleDay> list = CalendarBuilder.GenerateScheduleList(startDate, result);
+}
+else
+{
+    Console.WriteLine("Next Mow Event Date not enetered properly");
+}

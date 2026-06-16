@@ -11,7 +11,6 @@ namespace Parks_Route_Planner
             List<ScheduleDay> list = new List<ScheduleDay>();
             var currentDate = startDate;
             bool endGeneration = false;
-            Console.WriteLine(currentDate);
             while (endGeneration == false){
                 currentDate = currentDate.AddDays(1);
                 if (currentDate.Year == 2027)
@@ -27,21 +26,14 @@ namespace Parks_Route_Planner
                     int remainder = divisible % 14;
                     if (remainder == 0)
                     {
-                        Console.WriteLine("Skipping Mow Event Wednesday");
                         continue;
-                    }
-                    else if (remainder == 7)
-                    {
-                        Console.WriteLine("Available Wednesday below");
                     }
 
                 }
                 if (currentDate.DayOfWeek == DayOfWeek.Saturday || currentDate.DayOfWeek == DayOfWeek.Sunday)
                 {
-                    Console.WriteLine("Skipping weekend");
                     continue;
                 }
-                Console.WriteLine(currentDate);
                 ScheduleDay validDate = new ScheduleDay();
                 validDate.Date = currentDate.ToString();
                 list.Add(validDate);
