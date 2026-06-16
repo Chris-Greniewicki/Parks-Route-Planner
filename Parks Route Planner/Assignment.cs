@@ -8,6 +8,6 @@ namespace Parks_Route_Planner
     {
         public Crew AssignedCrew { get; set; }
         public Zone AssignedZone { get; set; }
-        public List<Site> AssignedPark { get; set; }
+        public List<Site> AssignedParks { get; set; }
     }
 }
