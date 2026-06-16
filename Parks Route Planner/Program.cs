@@ -30,4 +30,5 @@ DateTime startDate = DateTime.Today;
 string nextMowEventDate = config.NextMowEventDate;
 DateTime.TryParse(nextMowEventDate, out DateTime result);
 Console.WriteLine(nextMowEventDate);
-CalendarBuilder.GenerateScheduleList(startDate, result);
+List<ScheduleDay> list = CalendarBuilder.GenerateScheduleList(startDate, result);
+Console.WriteLine(list.Count);

@@ -30,6 +30,10 @@ namespace Parks_Route_Planner
                         Console.WriteLine("Skipping Mow Event Wednesday");
                         continue;
                     }
+                    else if (remainder == 7)
+                    {
+                        Console.WriteLine("Available Wednesday below");
+                    }
 
                 }
                 if (currentDate.DayOfWeek == DayOfWeek.Saturday || currentDate.DayOfWeek == DayOfWeek.Sunday)
@@ -38,6 +42,9 @@ namespace Parks_Route_Planner
                     continue;
                 }
                 Console.WriteLine(currentDate);
+                ScheduleDay validDate = new ScheduleDay();
+                validDate.Date = currentDate.ToString();
+                list.Add(validDate);
             }
             return list;
         }
