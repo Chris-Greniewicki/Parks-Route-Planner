@@ -147,5 +147,19 @@ namespace Parks_Route_Planner
                 remainingParks[zone.ZoneId] = new List<Site>(zone.Parks);
             }
         }
+
+        public bool IsGenerationComplete()
+        {
+            List<string> totalParkList = new();
+            foreach (Zone zone in zones)
+            {
+                foreach (Site park in zone.Parks)
+                {
+                    totalParkList.Add($"{zone.ZoneId}-{park.Park}");
+                }
+            }
+            bool crewHistoryMatchesParkList = crewVisitHistory.Values.All(crewHistory => totalParkList.All(park => crewHistory.Contains(park)));
+            return crewHistoryMatchesParkList;
+        }
     }
 }
