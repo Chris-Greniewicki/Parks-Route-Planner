@@ -115,5 +115,13 @@ namespace Parks_Route_Planner
                     remainingParks[zoneId].Clear();
             }
         }
+
+        internal void ResetCycle()
+        {
+            foreach (Zone zone in zones)
+            {
+                remainingParks[zone.ZoneId] = new List<Site>(zone.Parks);
+            }
+        }
     }
 }
