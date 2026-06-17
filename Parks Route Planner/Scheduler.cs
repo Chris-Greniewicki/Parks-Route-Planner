@@ -37,7 +37,23 @@ namespace Parks_Route_Planner
 
         public ScheduleDay ProcessDay(string date)
         {
-
+            List<int> chosenZones = PickZones();
+            Dictionary<int, List<int>> crewsAssigned = AssignedCrews(chosenZones);
+            ScheduleDay currentDay = new();
+            currentDay.Date = date;
+            currentDay.Assignments = new();
+            foreach (KeyValuePair<int, List<int>> zoneAssignment in crewsAssigned)
+            {
+                Zone currentZone = zones.FirstOrDefault(zone => zone.ZoneId == zoneAssignment.Key);
+                foreach (int crew in zoneAssignment.Value)
+                {
+                    Assignment assignment = new();
+                    assignment.AssignedZone = currentZone;
+                    assignment.AssignedCrew = crew;
+                    currentDay.Assignments.Add(assignment);
+                }
+            }
+            return currentDay;
         }
 
         //Generates a list of available zones based on whether parks are left to do or not and randomly selects 2 zones and returns them
