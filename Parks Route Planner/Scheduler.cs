@@ -54,6 +54,10 @@ namespace Parks_Route_Planner
                 }
             }
             MarkParksVisited(currentDay);
+            if (remainingParks.Values.All( parkList => parkList.Count == 0))
+            {
+                ResetCycle();
+            }
             return currentDay;
         }
 
