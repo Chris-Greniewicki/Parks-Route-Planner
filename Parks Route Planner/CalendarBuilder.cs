@@ -1,44 +1,34 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Text;
 
 namespace Parks_Route_Planner
 {
     internal class CalendarBuilder
     {
-        public static List<ScheduleDay> GenerateScheduleList(DateTime startDate, DateTime nextMowEventDate) 
+       
+        public static bool isValidWorkingDay(DateTime date, DateTime mowEventAnchor)
         {
-            List<ScheduleDay> list = new List<ScheduleDay>();
-            var currentDate = startDate;
-            bool endGeneration = false;
-            while (endGeneration == false){
-                currentDate = currentDate.AddDays(1);
-                if (currentDate.Year == 2027)
+            if (date.DayOfWeek == DayOfWeek.Wednesday)
+            {
+                DateTime endDate = date.Date;
+                TimeSpan difference = endDate - mowEventAnchor.Date;
+                double totalDays = difference.TotalDays;
+                int divisible = Convert.ToInt32(totalDays);
+                int remainder = divisible % 14;
+                if (remainder == 0)
                 {
-                    endGeneration = true;
+                    return false;
                 }
-                if (currentDate.DayOfWeek == DayOfWeek.Wednesday)
-                {
-                    DateTime endDate = currentDate.Date;
-                    TimeSpan difference = endDate - nextMowEventDate.Date;
-                    double totalDays = difference.TotalDays;
-                    int divisible = Convert.ToInt32(totalDays);
-                    int remainder = divisible % 14;
-                    if (remainder == 0)
-                    {
-                        continue;
-                    }
 
-                }
-                if (currentDate.DayOfWeek == DayOfWeek.Saturday || currentDate.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    continue;
-                }
-                ScheduleDay validDate = new ScheduleDay();
-                validDate.Date = currentDate.ToString();
-                list.Add(validDate);
             }
-            return list;
+            else if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
