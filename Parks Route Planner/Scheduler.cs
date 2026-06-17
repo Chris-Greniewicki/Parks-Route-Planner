@@ -53,6 +53,7 @@ namespace Parks_Route_Planner
                     currentDay.Assignments.Add(assignment);
                 }
             }
+            MarkParksVisited(currentDay);
             return currentDay;
         }
 
@@ -100,6 +101,19 @@ namespace Parks_Route_Planner
             }
             previousDayPairings = todaysAssignments;
             return todaysAssignments;
+        }
+        internal void MarkParksVisited(ScheduleDay currentDay)
+        {
+            foreach (Assignment assignment in currentDay.Assignments)
+            {
+                int zoneId = assignment.AssignedZone.ZoneId;
+                if (remainingParks[zoneId].Count >= 3)
+                {
+                    remainingParks[zoneId].RemoveRange(0, 3);
+                }
+                else
+                    remainingParks[zoneId].Clear();
+            }
         }
     }
 }
