@@ -6,6 +6,8 @@ namespace Parks_Route_Planner
 {
     internal class Scheduler
     {
+        public Dictionary<int, List<string>> crewVisitHistory = new();
+
         public int CrewCount = 0;
 
         //Creates a dictionary of all possible crew pairings
@@ -32,6 +34,10 @@ namespace Parks_Route_Planner
             foreach (Zone zone in zoneList)
             {
                 remainingParks.Add(zone.ZoneId, new List<Site>(zone.Parks));
+            }
+            for (int crew = 1; crew <= crewCount; crew++)
+            {
+                crewVisitHistory.Add(crew, new List<string>());
             }
         }
 
@@ -113,10 +119,24 @@ namespace Parks_Route_Planner
                 int zoneId = assignment.AssignedZone.ZoneId;
                 if (remainingParks[zoneId].Count >= 3)
                 {
+                    var parksToVisit = remainingParks[zoneId].Take(3);
+                    foreach (var park in parksToVisit)
+                    {
+                        string parkId = $"{zoneId}-{park.Park}";
+                        crewVisitHistory[assignment.AssignedCrew].Add(parkId);
+                    }
                     remainingParks[zoneId].RemoveRange(0, 3);
                 }
                 else
+                {
+                    var parksToVisit = remainingParks[zoneId].Take(remainingParks[zoneId].Count);
+                    foreach (var park in parksToVisit)
+                    {
+                        string parkId = $"{zoneId}-{park.Park}";
+                        crewVisitHistory[assignment.AssignedCrew].Add(parkId);
+                    }
                     remainingParks[zoneId].Clear();
+                }
             }
         }
 
