@@ -24,7 +24,6 @@ if (boolResult)
     List<ScheduleDay> schedule = new();
     Scheduler process = new Scheduler(zone, crewCount);
     DateTime currentDate = startDate;
-    int counter = 0;
     while (!process.IsGenerationComplete())
     {
         currentDate = currentDate.AddDays(1);
@@ -35,12 +34,6 @@ if (boolResult)
         }
         ScheduleDay validDay = process.ProcessDay(currentDate.ToString());
         schedule.Add(validDay);
-        Console.Write(".");
-        counter = counter + 1;
-        if (counter == 500)
-        {
-            break;
-        }
     }
     Console.WriteLine($"Generation complete! {schedule.Count} days scheduled.");
 }

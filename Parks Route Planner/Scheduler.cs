@@ -101,12 +101,18 @@ namespace Parks_Route_Planner
             Dictionary<int, List<int>> todaysAssignments = new();
             foreach (int zoneId in selectedZones)
             {
+                int counter = 0;
                 List<int> chosenCrew = new();
                 bool duplicateCrew = false;
                 do
                 {
                     chosenCrew = Random.Shared.GetItems(availableCrews.ToArray(), 2).ToList();
                     duplicateCrew = previousDayPairings.Values.Any<List<int>>(crewList => crewList.Contains(chosenCrew[0]) && crewList.Contains(chosenCrew[1]));
+                    counter = counter + 1;
+                    if (counter == 10)
+                    {
+                        break;
+                    }
                 }
                 while (duplicateCrew);
                 todaysAssignments.Add(zoneId, chosenCrew);
