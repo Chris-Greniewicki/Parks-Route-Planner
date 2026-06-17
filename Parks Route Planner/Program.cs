@@ -16,10 +16,18 @@ int parkCount = config.Zones.Sum(Zone => Zone.Parks.Count);
 //Run schedule generation
 DateTime startDate = DateTime.Today;
 string nextMowEventDate = config.NextMowEventDate;
+List<Zone> zone = config.Zones;
+int crewCount = config.Crews;
 bool boolResult = DateTime.TryParse(nextMowEventDate, out DateTime result);
 if (boolResult)
 {
     List<ScheduleDay> list = CalendarBuilder.GenerateScheduleList(startDate, result);
+    var process = new Scheduler(zone, crewCount);
+    foreach (ScheduleDay day in list)
+    {
+        process.ProcessDay(day.Date);
+    }
+
 }
 else
 {
