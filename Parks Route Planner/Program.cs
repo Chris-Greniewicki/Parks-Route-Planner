@@ -21,13 +21,28 @@ int crewCount = config.Crews;
 bool boolResult = DateTime.TryParse(nextMowEventDate, out DateTime result);
 if (boolResult)
 {
-    List<ScheduleDay> list = CalendarBuilder.GenerateScheduleList(startDate, result);
-    var process = new Scheduler(zone, crewCount);
-    foreach (ScheduleDay day in list)
+    List<ScheduleDay> schedule = new();
+    Scheduler process = new Scheduler(zone, crewCount);
+    DateTime currentDate = startDate;
+    int counter = 0;
+    while (!process.IsGenerationComplete())
     {
-        process.ProcessDay(day.Date);
+        currentDate = currentDate.AddDays(1);
+        bool validWorkingDay = CalendarBuilder.isValidWorkingDay(currentDate, result);
+        if (!validWorkingDay)
+        {
+            continue;
+        }
+        ScheduleDay validDay = process.ProcessDay(currentDate.ToString());
+        schedule.Add(validDay);
+        Console.Write(".");
+        counter = counter + 1;
+        if (counter == 500)
+        {
+            break;
+        }
     }
-
+    Console.WriteLine($"Generation complete! {schedule.Count} days scheduled.");
 }
 else
 {

@@ -71,20 +71,24 @@ namespace Parks_Route_Planner
         internal List<int> PickZones()
         {
             List<int> availableZones = new();
+
             foreach (KeyValuePair<int, List<Site>> zone in remainingParks)
             {
                 if (zone.Value.Count > 0)
                 {
-                    Console.WriteLine($"Zone {zone.Key} is available");
                     availableZones.Add(zone.Key);
                 }
-                else
-                {
-                    Console.WriteLine("Nothing in Zones");
-                }
+            }
+            if (availableZones.Count == 0)
+            {
+                return availableZones;
             }
             List<int> selectedZones = new();
-            selectedZones = Random.Shared.GetItems(availableZones.ToArray(), 2).ToList();
+            if (availableZones.Count < 2)
+            {
+                return availableZones;
+            }
+            selectedZones = availableZones.OrderBy(x => Random.Shared.Next()).Take(2).ToList();
             return selectedZones;
         }
         internal Dictionary<int, List<int>> AssignedCrews(List<int> selectedZones)
