@@ -8,6 +8,7 @@ namespace Parks_Route_Planner
     {
         public DateTime cycleStartDate;
         public DateTime mowEventAnchor;
+        public int workingDaysUsed;
 
         public Dictionary<int, List<string>> crewVisitHistory = new();
 
@@ -53,8 +54,13 @@ namespace Parks_Route_Planner
             ScheduleDay currentDay = new();
             currentDay.Date = date;
             currentDay.Assignments = new();
+            int totalWorkingDays = CalendarBuilder.GetWorkingDaysInCycle(cycleStartDate, mowEventAnchor);
+            int workingDaysRemaining = Math.Max(1, totalWorkingDays - workingDaysUsed);
+            int totalRemainingParks = remainingParks.Values.Sum(parkList => parkList.Count);
+            int parksPerCrew = Math.Max(1, totalRemainingParks / workingDaysRemaining / CrewCount);
             foreach (KeyValuePair<int, List<int>> zoneAssignment in crewsAssigned)
             {
+                int crewIndex = 0;
                 Zone currentZone = zones.FirstOrDefault(zone => zone.ZoneId == zoneAssignment.Key);
                 foreach (int crew in zoneAssignment.Value)
                 {
@@ -62,9 +68,12 @@ namespace Parks_Route_Planner
                     assignment.AssignedZone = currentZone;
                     assignment.AssignedCrew = crew;
                     currentDay.Assignments.Add(assignment);
+                    assignment.AssignedParks = remainingParks[zoneAssignment.Key].OrderBy(x => Random.Shared.Next()).Skip(crewIndex * parksPerCrew).Take(parksPerCrew).ToList();
+                    crewIndex++;
                 }
             }
-            MarkParksVisited(currentDay);
+            MarkParksVisited(currentDay, parksPerCrew);
+            workingDaysUsed++;
             if (remainingParks.Values.All( parkList => parkList.Count == 0))
             {
                 ResetCycle(DateTime.Parse(date));
@@ -127,20 +136,20 @@ namespace Parks_Route_Planner
             previousDayPairings = todaysAssignments;
             return todaysAssignments;
         }
-        internal void MarkParksVisited(ScheduleDay currentDay)
+        internal void MarkParksVisited(ScheduleDay currentDay, int parksPerCrew)
         {
             foreach (Assignment assignment in currentDay.Assignments)
             {
                 int zoneId = assignment.AssignedZone.ZoneId;
-                if (remainingParks[zoneId].Count >= 3)
+                if (remainingParks[zoneId].Count >= parksPerCrew)
                 {
-                    var parksToVisit = remainingParks[zoneId].Take(3);
+                    var parksToVisit = remainingParks[zoneId].Take(parksPerCrew);
                     foreach (var park in parksToVisit)
                     {
                         string parkId = $"{zoneId}-{park.Park}";
                         crewVisitHistory[assignment.AssignedCrew].Add(parkId);
                     }
-                    remainingParks[zoneId].RemoveRange(0, 3);
+                    remainingParks[zoneId].RemoveRange(0, parksPerCrew);
                 }
                 else
                 {
@@ -162,6 +171,7 @@ namespace Parks_Route_Planner
             {
                 remainingParks[zone.ZoneId] = new List<Site>(zone.Parks);
             }
+            workingDaysUsed = 0;
         }
 
         public bool IsGenerationComplete()
