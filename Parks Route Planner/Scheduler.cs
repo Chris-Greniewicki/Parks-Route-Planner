@@ -25,6 +25,7 @@ namespace Parks_Route_Planner
 
         public List<Zone> zones = new();
 
+        //Receives data to construct schedule
         public Scheduler(List<Zone> zoneList, int crewCount, DateTime cycleStartDate, DateTime mowEventAnchor)
         {
             foreach (Zone zone in zoneList)
@@ -52,6 +53,7 @@ namespace Parks_Route_Planner
             }
         }
 
+        //Main public method to handle all actions to generate a schedule for a day
         public ScheduleDay ProcessDay(string date)
         {
             List<int> chosenZones = PickZones();
@@ -170,6 +172,8 @@ namespace Parks_Route_Planner
             }
             return selectedZones;
         }
+
+        //Assigns crews to zones and pairs crews for large parks
         internal Dictionary<int, List<int>> AssignedCrews(List<int> selectedZones, List<int> largeZones)
         {
             List<int> availableCrews = new();
@@ -218,6 +222,7 @@ namespace Parks_Route_Planner
             return todaysAssignments;
         }
 
+        //Resets available parks to be full lists of parks once a cycle completes
         internal void ResetCycle(DateTime newCycleStart)
         {
             cycleStartDate = newCycleStart;
@@ -233,6 +238,7 @@ namespace Parks_Route_Planner
             }
         }
 
+        //Checks condition to see if all crews have visited every park at least once to stop generating a schedule
         public bool IsGenerationComplete()
         {
             List<string> totalParkList = new();
