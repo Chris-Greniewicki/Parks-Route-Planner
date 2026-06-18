@@ -36,6 +36,8 @@ if (boolResult)
         schedule.Add(validDay);
     }
     Console.WriteLine($"Generation complete! {schedule.Count} days scheduled.");
+    RouteFileWriter.WriteRouteFile(schedule);
+    Console.WriteLine($"File saved to: Routes_{DateTime.Today:yyyy_MM_dd}.txt");
 }
 else
 {
