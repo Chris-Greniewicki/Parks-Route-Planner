@@ -22,7 +22,7 @@ bool boolResult = DateTime.TryParse(nextMowEventDate, out DateTime result);
 if (boolResult)
 {
     List<ScheduleDay> schedule = new();
-    Scheduler process = new Scheduler(zone, crewCount);
+    Scheduler process = new Scheduler(zone, crewCount, startDate, result);
     DateTime currentDate = startDate;
     while (!process.IsGenerationComplete())
     {

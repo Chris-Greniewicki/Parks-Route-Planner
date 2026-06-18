@@ -6,6 +6,9 @@ namespace Parks_Route_Planner
 {
     internal class Scheduler
     {
+        public DateTime cycleStartDate;
+        public DateTime mowEventAnchor;
+
         public Dictionary<int, List<string>> crewVisitHistory = new();
 
         public int CrewCount = 0;
@@ -20,8 +23,10 @@ namespace Parks_Route_Planner
 
         public List<Zone> zones = new();
 
-        public Scheduler(List<Zone> zoneList, int crewCount)
+        public Scheduler(List<Zone> zoneList, int crewCount, DateTime cycleStartDate, DateTime mowEventAnchor)
         {
+            this.cycleStartDate = cycleStartDate;
+            this.mowEventAnchor = mowEventAnchor;
             CrewCount = crewCount;
             for (int crew = 1; crew <= CrewCount; crew++)
             {
@@ -62,7 +67,7 @@ namespace Parks_Route_Planner
             MarkParksVisited(currentDay);
             if (remainingParks.Values.All( parkList => parkList.Count == 0))
             {
-                ResetCycle();
+                ResetCycle(DateTime.Parse(date));
             }
             return currentDay;
         }
@@ -150,8 +155,9 @@ namespace Parks_Route_Planner
             }
         }
 
-        internal void ResetCycle()
+        internal void ResetCycle(DateTime newCycleStart)
         {
+            cycleStartDate = newCycleStart;
             foreach (Zone zone in zones)
             {
                 remainingParks[zone.ZoneId] = new List<Site>(zone.Parks);
