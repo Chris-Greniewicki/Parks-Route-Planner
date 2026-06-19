@@ -22,21 +22,38 @@ bool boolResult = DateTime.TryParse(nextMowEventDate, out DateTime result);
 if (boolResult)
 {
     List<ScheduleDay> schedule = new();
+    List<DateTime> cycleStartDates = new();
     Scheduler process = new Scheduler(zone, crewCount, startDate, result);
     DateTime currentDate = startDate;
+
+    DateTime cycleStartMonday = startDate;
+    while (cycleStartMonday.DayOfWeek != DayOfWeek.Monday)
+        cycleStartMonday = cycleStartMonday.AddDays(1);
+
+    cycleStartDates.Add(cycleStartMonday);
+
     while (!process.IsGenerationComplete())
     {
         currentDate = currentDate.AddDays(1);
         bool validWorkingDay = CalendarBuilder.isValidWorkingDay(currentDate, result);
         if (!validWorkingDay)
-        {
             continue;
+
+        if (currentDate.DayOfWeek == DayOfWeek.Monday &&
+            (currentDate - cycleStartMonday).Days % 14 == 0 &&
+            currentDate != cycleStartMonday)
+        {
+            process.ResetCycle(currentDate);
+            cycleStartMonday = currentDate;
+            cycleStartDates.Add(cycleStartMonday);
         }
+
         ScheduleDay validDay = process.ProcessDay(currentDate.ToString());
         schedule.Add(validDay);
     }
+
     Console.WriteLine($"Generation complete! {schedule.Count} days scheduled.");
-    RouteFileWriter.WriteRouteFile(schedule);
+    RouteFileWriter.WriteRouteFile(schedule, cycleStartDates);
     Console.WriteLine($"File saved to: Routes_{DateTime.Today:yyyy_MM_dd}.txt");
 }
 else
