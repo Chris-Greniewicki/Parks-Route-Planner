@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="Parks Route Planner/Parks Route Planner.csproj" />
+  <Project Path="Parks Route Planner/Parks Route Planner.csproj">
+    <BuildType Project="Release" />
+  </Project>
 </Solution>

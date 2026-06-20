@@ -1,81 +1,81 @@
 {
   "Crews": 4,
-  "NextMowEventDate": "6-17-2026",
+  "NextMowEventDate": "7-1-2026",
   "Zones": [
     {
       "ZoneId": 1,
       "Parks": [
-          {
-            "Park": "Harkey Park",
-            "Address": "1708 SW Douglas Ave",
-            "isLarge": false
-          },
-          {
-            "Park": "James Edward Thornton Park",
-            "Address": "1308 SW Tennessee Ave",
-            "isLarge": false
-          },
-          {
-            "Park": "Verna Cook Park",
-            "Address": "1208 SW Garfield Ave",
-            "isLarge": false
-          },
-          {
-            "Park": "Mocine park",
-            "Address": "810 SW Roosevelt Ave",
-            "isLarge": false
-          },
-          {
-            "Park": "Olson Park",
-            "Address": "1202 SW E Ave",
-            "isLarge": false
-          },
-          {
-            "Park": "George M Lee Park",
-            "Address": "601 SW Belmont Ave",
-            "isLarge": false
-          },
-          {
-            "Park": "Mattie Beal Park",
-            "Address": "909 SW 9th St",
-            "isLarge": false
-          },
-          {
-            "Park": "Waldman Park",
-            "Address": "1210 SW J Ave",
-            "isLarge": false
-          },
-          {
-            "Park": "Toby Morris Park",
-            "Address": "701 SW I Ave",
-            "isLarge": false
-          },
-          {
-            "Park": "Union Park",
-            "Address": "502 SW I Ave",
-            "isLarge": false
-          },
-          {
-            "Park": "Patterson park",
-            "Address": "2812 SW H Ave",
-            "isLarge": false
-          },
-          {
-            "Park": "Vito Baxter Puppy Promenade(Dog Park)",
-            "Address": "3200 SW Lee Blvd",
-            "isLarge": true
-          },
-          {
-            "Park": "Sidewalks",
-            "Address": "1300 SW Goergia Ave",
-            "isLarge": false
-          },
-          {
-            "Park": "Mall Medians",
-            "Address": "600 SW F Ave",
-            "isLarge": false
-          }
-       ]
+        {
+          "Park": "Harkey Park",
+          "Address": "1708 SW Douglas Ave",
+          "isLarge": false
+        },
+        {
+          "Park": "James Edward Thornton Park",
+          "Address": "1308 SW Tennessee Ave",
+          "isLarge": false
+        },
+        {
+          "Park": "Verna Cook Park",
+          "Address": "1208 SW Garfield Ave",
+          "isLarge": false
+        },
+        {
+          "Park": "Mocine park",
+          "Address": "810 SW Roosevelt Ave",
+          "isLarge": false
+        },
+        {
+          "Park": "Olson Park",
+          "Address": "1202 SW E Ave",
+          "isLarge": false
+        },
+        {
+          "Park": "George M Lee Park",
+          "Address": "601 SW Belmont Ave",
+          "isLarge": false
+        },
+        {
+          "Park": "Mattie Beal Park",
+          "Address": "909 SW 9th St",
+          "isLarge": false
+        },
+        {
+          "Park": "Waldman Park",
+          "Address": "1210 SW J Ave",
+          "isLarge": false
+        },
+        {
+          "Park": "Toby Morris Park",
+          "Address": "701 SW I Ave",
+          "isLarge": false
+        },
+        {
+          "Park": "Union Park",
+          "Address": "502 SW I Ave",
+          "isLarge": false
+        },
+        {
+          "Park": "Patterson park",
+          "Address": "2812 SW H Ave",
+          "isLarge": false
+        },
+        {
+          "Park": "Vito Baxter Puppy Promenade(Dog Park)",
+          "Address": "3200 SW Lee Blvd",
+          "isLarge": true
+        },
+        {
+          "Park": "Sidewalks",
+          "Address": "1300 SW Goergia Ave",
+          "isLarge": false
+        },
+        {
+          "Park": "Mall Medians",
+          "Address": "600 SW F Ave",
+          "isLarge": false
+        }
+      ]
     },
     {
       "ZoneId": 2,
@@ -326,7 +326,7 @@
           "isLarge": false
         },
         {
-          "Park": "Greer Park(Kid's Zone)",
+          "Park": "Greer Park(Kid\u0027s Zone)",
           "Address": "711 NW 38th St",
           "isLarge": true
         },
@@ -336,7 +336,7 @@
           "isLarge": false
         },
         {
-          "Park": "Ahlschlager Park(17th & G)",
+          "Park": "Ahlschlager Park(17th \u0026 G)",
           "Address": "1702 SW G Ave",
           "isLarge": true
         }

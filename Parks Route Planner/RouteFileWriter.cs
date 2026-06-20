@@ -6,10 +6,9 @@ namespace Parks_Route_Planner
 {
     internal class RouteFileWriter
     {
-        public static void WriteRouteFile(List<ScheduleDay> schedule, List<DateTime> cycleStartDates)
+        public static void WriteRouteFile(List<ScheduleDay> schedule, List<DateTime> cycleStartDates, string outputPath)
         {
-            string fileName = $"Routes_{DateTime.Today:yyyy_MM_dd}.txt";
-            using StreamWriter writer = File.CreateText(fileName);
+            using StreamWriter writer = File.CreateText(outputPath);
             int cycleNumber = 0;
             HashSet<string> cycleParks = new();
 

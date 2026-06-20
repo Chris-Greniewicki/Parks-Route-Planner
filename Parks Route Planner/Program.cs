@@ -4,21 +4,28 @@ using System.IO;
 using System.Text.Json;
 
 //locate config.json file
-string currentDir = AppContext.BaseDirectory;
-string filePath = Path.Combine(currentDir, "config.json");
+string filePath = Path.Combine(Directory.GetParent(AppContext.BaseDirectory).Parent.Parent.Parent.FullName, "config.json");
+
 //Read and store json file
 string jsonString = File.ReadAllText(filePath);
 
 //Deserialize json file
 Config config = JsonSerializer.Deserialize<Config>(jsonString);
-//count parks across zones
+
+//Launch config editor UI
+var editor = new ConfigEditor(config, filePath);
+config = editor.Run();
+
+//Count parks across zones
 int parkCount = config.Zones.Sum(Zone => Zone.Parks.Count);
+
 //Run schedule generation
 DateTime startDate = DateTime.Today;
 string nextMowEventDate = config.NextMowEventDate;
 List<Zone> zone = config.Zones;
 int crewCount = config.Crews;
 bool boolResult = DateTime.TryParse(nextMowEventDate, out DateTime result);
+
 if (boolResult)
 {
     List<ScheduleDay> schedule = new();
@@ -53,11 +60,18 @@ if (boolResult)
         schedule.Add(validDay);
     }
 
+    string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+    string outputFile = Path.Combine(desktopPath, $"Routes_{DateTime.Today:yyyy_MM_dd}.txt");
+
     Console.WriteLine($"Generation complete! {schedule.Count} days scheduled.");
-    RouteFileWriter.WriteRouteFile(schedule, cycleStartDates);
-    Console.WriteLine($"File saved to: Routes_{DateTime.Today:yyyy_MM_dd}.txt");
+    RouteFileWriter.WriteRouteFile(schedule, cycleStartDates, outputFile);
+    Console.WriteLine($"File saved to: {outputFile}");
+    Console.WriteLine();
+    Console.WriteLine("Press any key to exit...");
+    Console.ReadKey(true);
 }
 else
 {
-    Console.WriteLine("Next Mow Event Date not enetered properly");
+    Console.WriteLine("Next Mow Event Date not entered properly.");
+    Console.ReadKey(true);
 }
