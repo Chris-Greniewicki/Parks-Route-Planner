@@ -41,7 +41,8 @@ if (boolResult)
 
         if (currentDate.DayOfWeek == DayOfWeek.Monday &&
             (currentDate - cycleStartMonday).Days % 14 == 0 &&
-            currentDate != cycleStartMonday)
+            currentDate != cycleStartMonday &&
+            process.remainingParks.Values.All(p => p.Count == 0))
         {
             process.ResetCycle(currentDate);
             cycleStartMonday = currentDate;

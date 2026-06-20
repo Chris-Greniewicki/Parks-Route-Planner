@@ -33,7 +33,7 @@ namespace Parks_Route_Planner
         public static int GetWorkingDaysInCycle(DateTime cycleStart, DateTime mowEventAnchor)
         {
             int validDaysCounter = 0;
-            for (DateTime cycleStartDate = cycleStart; cycleStartDate <= cycleStart.AddDays(14); cycleStartDate = cycleStartDate.AddDays(1))
+            for (DateTime cycleStartDate = cycleStart; cycleStartDate < cycleStart.AddDays(14); cycleStartDate = cycleStartDate.AddDays(1))
             {
                bool isValid = isValidWorkingDay(cycleStartDate, mowEventAnchor);
                 if (isValid)

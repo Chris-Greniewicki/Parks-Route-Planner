@@ -81,7 +81,7 @@ namespace Parks_Route_Planner
                     assignment1.AssignedParks = crew1Parks;
                     currentDay.Assignments.Add(assignment1);
                     foreach (var park in crew1Parks)
-                        crewVisitHistory[assignment1.AssignedCrew].Add($"{zoneAssignment.Key}-{park.Park}");
+                        crewVisitHistory[assignment1.AssignedCrew].Add($"{zoneAssignment.Key}-{park.Park.Trim()}");
 
                     Assignment assignment2 = new();
                     assignment2.AssignedZone = zones.FirstOrDefault(z => z.ZoneId == zoneAssignment.Key);
@@ -89,7 +89,7 @@ namespace Parks_Route_Planner
                     assignment2.AssignedParks = crew2Parks;
                     currentDay.Assignments.Add(assignment2);
                     foreach (var park in crew2Parks)
-                        crewVisitHistory[assignment2.AssignedCrew].Add($"{zoneAssignment.Key}-{park.Park}");
+                        crewVisitHistory[assignment2.AssignedCrew].Add($"{zoneAssignment.Key}-{park.Park.Trim()}");
 
                     remainingParks[zoneAssignment.Key] = shuffledParks
                         .Where(p => p != largePark && p != regularParks[0] && (regularParks.Count <= 1 || p != regularParks[1]))
@@ -97,8 +97,10 @@ namespace Parks_Route_Planner
                 }
                 else
                 {
-                    var shuffledParks = remainingParks[zoneAssignment.Key].OrderBy(x => Random.Shared.Next()).ToList();
-                    int parksAvailable = shuffledParks.Count;
+                    int crew1Id = zoneAssignment.Value[0];
+                    int crew2Id = zoneAssignment.Value.Count > 1 ? zoneAssignment.Value[1] : -1;
+
+                    int parksAvailable = remainingParks[zoneAssignment.Key].Count;
                     int daysRemaining = Math.Max(1, totalWorkingDays - workingDaysUsed);
                     int estimatedZoneDays = Math.Max(1, (daysRemaining * 2) / zones.Count);
                     int neededPerCrew = (int)Math.Ceiling(parksAvailable / 2.0 / estimatedZoneDays);
@@ -106,37 +108,53 @@ namespace Parks_Route_Planner
                     if (parksAvailable >= 4)
                         perCrew = Math.Max(2, perCrew);
 
-                    List<Site> crew1Parks = shuffledParks.Take(perCrew).ToList();
-                    List<Site> crew2Parks = parksAvailable > perCrew
-                        ? shuffledParks.Skip(perCrew).Take(perCrew).ToList()
-                        : new List<Site>();
+                    // Each crew gets parks they haven't seen prioritized first
+                    var parksForCrew1 = remainingParks[zoneAssignment.Key]
+                        .OrderByDescending(p => !crewVisitHistory[crew1Id].Contains($"{zoneAssignment.Key}-{p.Park.Trim()}"))
+                        .ThenBy(x => Random.Shared.Next())
+                        .ToList();
 
-                    remainingParks[zoneAssignment.Key] = shuffledParks.Skip(crew1Parks.Count + crew2Parks.Count).ToList();
+                    List<Site> crew1Parks = parksForCrew1.Take(perCrew).ToList();
+                    HashSet<Site> assigned = new HashSet<Site>(crew1Parks);
+
+                    List<Site> crew2Parks = new List<Site>();
+                    if (crew2Id > 0)
+                    {
+                        var parksForCrew2 = remainingParks[zoneAssignment.Key]
+                            .Where(p => !assigned.Contains(p))
+                            .OrderByDescending(p => !crewVisitHistory[crew2Id].Contains($"{zoneAssignment.Key}-{p.Park.Trim()}"))
+                            .ThenBy(x => Random.Shared.Next())
+                            .ToList();
+
+                        crew2Parks = parksForCrew2.Take(perCrew).ToList();
+                        assigned.UnionWith(crew2Parks);
+                    }
+
+                    remainingParks[zoneAssignment.Key] = remainingParks[zoneAssignment.Key]
+                        .Where(p => !assigned.Contains(p))
+                        .ToList();
 
                     Assignment assignment1 = new();
                     assignment1.AssignedZone = zones.FirstOrDefault(z => z.ZoneId == zoneAssignment.Key);
-                    assignment1.AssignedCrew = zoneAssignment.Value[0];
+                    assignment1.AssignedCrew = crew1Id;
                     assignment1.AssignedParks = crew1Parks;
                     currentDay.Assignments.Add(assignment1);
                     foreach (var park in crew1Parks)
-                        crewVisitHistory[assignment1.AssignedCrew].Add($"{zoneAssignment.Key}-{park.Park}");
+                        crewVisitHistory[crew1Id].Add($"{zoneAssignment.Key}-{park.Park.Trim()}");
 
-                    if (zoneAssignment.Value.Count > 1)
+                    if (crew2Id > 0)
                     {
                         Assignment assignment2 = new();
                         assignment2.AssignedZone = zones.FirstOrDefault(z => z.ZoneId == zoneAssignment.Key);
-                        assignment2.AssignedCrew = zoneAssignment.Value[1];
+                        assignment2.AssignedCrew = crew2Id;
                         assignment2.AssignedParks = crew2Parks;
                         currentDay.Assignments.Add(assignment2);
                         foreach (var park in crew2Parks)
-                            crewVisitHistory[assignment2.AssignedCrew].Add($"{zoneAssignment.Key}-{park.Park}");
+                            crewVisitHistory[crew2Id].Add($"{zoneAssignment.Key}-{park.Park.Trim()}");
                     }
                 }
             }
-
             workingDaysUsed++;
-            if (remainingParks.Values.All(parkList => parkList.Count == 0))
-                ResetCycle(DateTime.Parse(date));
             return currentDay;
         }
 
@@ -169,17 +187,54 @@ namespace Parks_Route_Planner
                 return selectedZones;
             }
 
-            List<int> pendingWithParks = pendingZones.Where(z => availableZones.Contains(z) && remainingParks[z].Count >= 2).ToList();
+            List<int> pendingWithParks = pendingZones
+                .Where(z => availableZones.Contains(z) && remainingParks[z].Count >= 2)
+                .ToList();
+
+            if (pendingWithParks.Count == 0)
+            {
+                pendingZones.AddRange(remainingParks
+                    .Where(z => z.Value.Count > 0 && !pendingZones.Contains(z.Key))
+                    .Select(z => z.Key));
+                pendingWithParks = pendingZones
+                    .Where(z => availableZones.Contains(z) && remainingParks[z].Count >= 2)
+                    .ToList();
+            }
+
+            // Score each candidate zone by total unseen crew-park gaps it can resolve
+            Func<int, int> zoneGapScore = zoneId =>
+            {
+                var zoneParkList = zones.First(z => z.ZoneId == zoneId).Parks;
+                int totalPossible = CrewCount * zoneParkList.Count;
+                if (totalPossible == 0) return 0;
+                int gaps = crewVisitHistory.Keys.Sum(crew =>
+                    zoneParkList.Count(park => !crewVisitHistory[crew].Contains($"{zoneId}-{park.Park.Trim()}")));
+                // Return as a percentage (0–100) so zone size doesn't bias selection
+                return (gaps * 100) / totalPossible;
+            };
+
             if (pendingWithParks.Count >= 2)
-                selectedZones = pendingWithParks.OrderBy(x => Random.Shared.Next()).Take(2).ToList();
+                selectedZones = pendingWithParks
+                    .OrderByDescending(zoneGapScore)
+                    .ThenBy(x => Random.Shared.Next())
+                    .Take(2)
+                    .ToList();
             else if (pendingWithParks.Count == 1)
             {
                 selectedZones.Add(pendingWithParks[0]);
-                List<int> others = availableZones.Where(z => !selectedZones.Contains(z)).OrderBy(x => Random.Shared.Next()).ToList();
+                List<int> others = availableZones
+                    .Where(z => !selectedZones.Contains(z))
+                    .OrderByDescending(zoneGapScore)
+                    .ThenBy(x => Random.Shared.Next())
+                    .ToList();
                 if (others.Count > 0) selectedZones.Add(others[0]);
             }
             else
-                selectedZones = availableZones.OrderBy(x => Random.Shared.Next()).Take(2).ToList();
+                selectedZones = availableZones
+                    .OrderByDescending(zoneGapScore)
+                    .ThenBy(x => Random.Shared.Next())
+                    .Take(2)
+                    .ToList();
 
             // Keep adding zones until we have enough parks for all crews
             int totalSelectedParks = selectedZones.Sum(z => remainingParks[z].Count);
@@ -215,6 +270,7 @@ namespace Parks_Route_Planner
             {
                 if (availableCrews.Count < 2) break;
                 List<int> chosenCrew = new();
+
                 if (largeZones.Contains(zoneId))
                 {
                     var validPairs = crewPairs
@@ -225,6 +281,15 @@ namespace Parks_Route_Planner
                             return availableCrews.Contains(a) && availableCrews.Contains(b);
                         })
                         .OrderBy(p => p.Value)
+                        .ThenByDescending(p => {
+                            var parts = p.Key.Split('-');
+                            int a = int.Parse(parts[0]);
+                            int b = int.Parse(parts[1]);
+                            return remainingParks[zoneId]
+                                .Count(park => !crewVisitHistory[a].Contains($"{zoneId}-{park.Park.Trim()}"))
+                                + remainingParks[zoneId]
+                                .Count(park => !crewVisitHistory[b].Contains($"{zoneId}-{park.Park.Trim()}"));
+                        })
                         .ToList();
 
                     if (validPairs.Count == 0)
@@ -239,17 +304,14 @@ namespace Parks_Route_Planner
                 }
                 else
                 {
-                    int counter = 0;
-                    bool duplicateCrew = false;
-                    do
-                    {
-                        chosenCrew = availableCrews.OrderBy(x => Random.Shared.Next()).Take(2).ToList();
-                        duplicateCrew = previousDayPairings.Values.Any<List<int>>(crewList => crewList.Contains(chosenCrew[0]) && crewList.Contains(chosenCrew[1]));
-                        counter++;
-                        if (counter == 10) break;
-                    }
-                    while (duplicateCrew);
+                    chosenCrew = availableCrews
+                        .OrderByDescending(crew => remainingParks[zoneId]
+                            .Count(park => !crewVisitHistory[crew].Contains($"{zoneId}-{park.Park.Trim()}")))
+                        .ThenBy(x => Random.Shared.Next())
+                        .Take(2)
+                        .ToList();
                 }
+
                 todaysAssignments.Add(zoneId, chosenCrew);
                 availableCrews.Remove(chosenCrew[0]);
                 availableCrews.Remove(chosenCrew[1]);
@@ -282,10 +344,15 @@ namespace Parks_Route_Planner
             {
                 foreach (Site park in zone.Parks)
                 {
-                    totalParkList.Add($"{zone.ZoneId}-{park.Park}");
+                    totalParkList.Add($"{zone.ZoneId}-{park.Park.Trim()}");
                 }
             }
-            bool crewHistoryMatchesParkList = crewVisitHistory.Values.All(crewHistory => totalParkList.All(park => crewHistory.Contains(park)));
+
+            if (totalParkList.Count == 0) return false;
+
+            bool crewHistoryMatchesParkList = crewVisitHistory.Values.All(crewHistory =>
+                totalParkList.All(park => crewHistory.Contains(park)));
+
             return crewHistoryMatchesParkList;
         }
     }
