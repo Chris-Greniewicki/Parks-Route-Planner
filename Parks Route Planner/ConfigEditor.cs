@@ -48,6 +48,7 @@ namespace Parks_Route_Planner
                             "Manage Zones & Parks",
                             "Change Number of Crews",
                             "Change Mow Event Date",
+                            "About & Features",
                             "Exit"));
 
                 switch (choice)
@@ -65,6 +66,10 @@ namespace Parks_Route_Planner
 
                     case "Change Mow Event Date":
                         ChangeMowEventDate();
+                        break;
+
+                    case "About & Features":
+                        FeaturesDisplay.Show();
                         break;
 
                     case "Exit":
@@ -241,7 +246,6 @@ namespace Parks_Route_Planner
             AnsiConsole.MarkupLine("[silver]Press Enter with a blank field at any point to cancel and go back.[/]");
             AnsiConsole.WriteLine();
 
-            // Park name
             AnsiConsole.Write(new Panel(
                 "[silver]Type the full name of the park exactly as it should appear on the route sheet.\nExample:[/] [white]Harkey Park[/]")
                 .Header("[steelblue1] Park Name [/]")
@@ -259,7 +263,6 @@ namespace Parks_Route_Planner
 
             AnsiConsole.WriteLine();
 
-            // Address
             AnsiConsole.Write(new Panel(
                 "[silver]Type the street address of the park. This appears on the route sheet so crews know where to go.\nExample:[/] [white]1708 SW Douglas Ave[/]")
                 .Header("[steelblue1] Address [/]")
@@ -277,7 +280,6 @@ namespace Parks_Route_Planner
 
             AnsiConsole.WriteLine();
 
-            // Large park
             AnsiConsole.Write(new Panel(
                 "[silver]A large park requires TWO crews working together on the same day because it is too big for one crew to finish alone.\nIf one crew can handle it in a day, choose No.[/]")
                 .Header("[steelblue1] Does this park need two crews? [/]")
@@ -301,8 +303,6 @@ namespace Parks_Route_Planner
             bool isLarge = largeChoice.StartsWith("Yes");
 
             AnsiConsole.WriteLine();
-
-            // Confirm
             AnsiConsole.MarkupLine("[steelblue1]─────────────────────────────────────────[/]");
             AnsiConsole.MarkupLine($"[steelblue1]Name:[/]    [white]{name}[/]");
             AnsiConsole.MarkupLine($"[steelblue1]Address:[/] [white]{address}[/]");

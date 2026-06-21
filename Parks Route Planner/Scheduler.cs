@@ -12,56 +12,61 @@ namespace Parks_Route_Planner
         public int workingDaysUsed;
 
         public Dictionary<int, List<string>> crewVisitHistory = new();
+        public Dictionary<int, int> crewSitOutHistory = new();
+        public int supplementalCrewIndex = 0;
 
         public int CrewCount = 0;
 
-        //Creates a dictionary of all possible crew pairings
+        // Creates a dictionary of all possible crew pairings
         public Dictionary<string, int> crewPairs = new();
 
         public Dictionary<int, List<int>> previousDayPairings = new();
 
-        //Creates a list of parks for each zone that can be manipulated during the 2 week period to determine assignments
+        // Creates a list of parks for each zone that can be manipulated during the 2 week period
         public Dictionary<int, List<Site>> remainingParks = new();
 
         public List<Zone> zones = new();
 
-        //Receives data to construct schedule
+        // Receives data to construct schedule
         public Scheduler(List<Zone> zoneList, int crewCount, DateTime cycleStartDate, DateTime mowEventAnchor)
         {
             foreach (Zone zone in zoneList)
-            {
                 pendingZones.Add(zone.ZoneId);
-            }
+
             this.cycleStartDate = cycleStartDate;
             this.mowEventAnchor = mowEventAnchor;
             CrewCount = crewCount;
+
             for (int crew = 1; crew <= CrewCount; crew++)
             {
                 for (int innercrew = crew + 1; innercrew <= CrewCount; innercrew++)
-                {
                     crewPairs.Add($"{crew}-{innercrew}", 0);
-                }
             }
+
             zones = zoneList;
+
             foreach (Zone zone in zoneList)
-            {
                 remainingParks.Add(zone.ZoneId, new List<Site>(zone.Parks));
-            }
+
             for (int crew = 1; crew <= crewCount; crew++)
             {
                 crewVisitHistory.Add(crew, new List<string>());
+                crewSitOutHistory.Add(crew, 0);
             }
         }
 
-        //Main public method to handle all actions to generate a schedule for a day
+        // Main public method to handle all actions to generate a schedule for a day
         public ScheduleDay ProcessDay(string date)
         {
             List<int> chosenZones = PickZones();
             List<int> largeZones = chosenZones.Where(zone => remainingParks[zone].Any(park => park.isLarge)).ToList();
-            Dictionary<int, List<int>> crewsAssigned = AssignedCrews(chosenZones, largeZones);
+            Dictionary<int, List<int>> crewsAssigned = AssignedCrews(chosenZones, largeZones, out List<int> supplementalCrews);
+
             ScheduleDay currentDay = new();
             currentDay.Date = date;
             currentDay.Assignments = new();
+            currentDay.SupplementalCrews = supplementalCrews;
+
             int totalWorkingDays = CalendarBuilder.GetWorkingDaysInCycle(cycleStartDate, mowEventAnchor);
 
             foreach (KeyValuePair<int, List<int>> zoneAssignment in crewsAssigned)
@@ -108,7 +113,6 @@ namespace Parks_Route_Planner
                     if (parksAvailable >= 4)
                         perCrew = Math.Max(2, perCrew);
 
-                    // Each crew gets parks they haven't seen prioritized first
                     var parksForCrew1 = remainingParks[zoneAssignment.Key]
                         .OrderByDescending(p => !crewVisitHistory[crew1Id].Contains($"{zoneAssignment.Key}-{p.Park.Trim()}"))
                         .ThenBy(x => Random.Shared.Next())
@@ -154,11 +158,12 @@ namespace Parks_Route_Planner
                     }
                 }
             }
+
             workingDaysUsed++;
             return currentDay;
         }
 
-        //Generates a list of available zones based on whether parks are left to do or not and randomly selects 2 zones and returns them
+        // Generates a list of available zones and selects the appropriate number based on crew count
         internal List<int> PickZones()
         {
             List<int> availableZones = new();
@@ -177,6 +182,9 @@ namespace Parks_Route_Planner
 
             if (availableZones.Count == 0)
                 return availableZones;
+
+            // How many zones to work today based on crew count
+            int zonesNeeded = Math.Max(1, CrewCount / 2);
 
             List<int> selectedZones = new();
 
@@ -209,36 +217,42 @@ namespace Parks_Route_Planner
                 if (totalPossible == 0) return 0;
                 int gaps = crewVisitHistory.Keys.Sum(crew =>
                     zoneParkList.Count(park => !crewVisitHistory[crew].Contains($"{zoneId}-{park.Park.Trim()}")));
-                // Return as a percentage (0–100) so zone size doesn't bias selection
                 return (gaps * 100) / totalPossible;
             };
 
-            if (pendingWithParks.Count >= 2)
+            if (pendingWithParks.Count >= zonesNeeded)
                 selectedZones = pendingWithParks
                     .OrderByDescending(zoneGapScore)
                     .ThenBy(x => Random.Shared.Next())
-                    .Take(2)
+                    .Take(zonesNeeded)
                     .ToList();
-            else if (pendingWithParks.Count == 1)
+            else if (pendingWithParks.Count >= 1)
             {
-                selectedZones.Add(pendingWithParks[0]);
+                selectedZones.AddRange(pendingWithParks
+                    .OrderByDescending(zoneGapScore)
+                    .ThenBy(x => Random.Shared.Next()));
                 List<int> others = availableZones
                     .Where(z => !selectedZones.Contains(z))
                     .OrderByDescending(zoneGapScore)
                     .ThenBy(x => Random.Shared.Next())
                     .ToList();
-                if (others.Count > 0) selectedZones.Add(others[0]);
+                foreach (int z in others)
+                {
+                    if (selectedZones.Count >= zonesNeeded) break;
+                    selectedZones.Add(z);
+                }
             }
             else
                 selectedZones = availableZones
                     .OrderByDescending(zoneGapScore)
                     .ThenBy(x => Random.Shared.Next())
-                    .Take(2)
+                    .Take(zonesNeeded)
                     .ToList();
 
-            // Keep adding zones until we have enough parks for all crews
+            // Keep adding zones until we have enough parks for all assignable crews
+            int assignableCrews = (CrewCount / 2) * 2;
             int totalSelectedParks = selectedZones.Sum(z => remainingParks[z].Count);
-            while (totalSelectedParks < CrewCount * 2)
+            while (totalSelectedParks < assignableCrews * 2)
             {
                 List<int> remaining = remainingParks
                     .Where(z => z.Value.Count > 0 && !selectedZones.Contains(z.Key))
@@ -258,14 +272,28 @@ namespace Parks_Route_Planner
             return selectedZones;
         }
 
-        //Assigns crews to zones and pairs crews for large parks
-        internal Dictionary<int, List<int>> AssignedCrews(List<int> selectedZones, List<int> largeZones)
+        // Assigns crews to zones with strict round-robin supplemental rotation
+        internal Dictionary<int, List<int>> AssignedCrews(List<int> selectedZones, List<int> largeZones, out List<int> supplementalCrews)
         {
-            List<int> availableCrews = new();
-            for (int crew = 1; crew <= CrewCount; crew++)
-                availableCrews.Add(crew);
+            supplementalCrews = new List<int>();
 
+            List<int> allCrews = Enumerable.Range(1, CrewCount).ToList();
+
+            if (CrewCount % 2 != 0)
+            {
+                // Strict round-robin: crews sit out in order 1,2,3,4,5,1,2,3,4,5,...
+                // supplementalCrewIndex tracks whose turn it is globally across all days
+                int crewToSitOut = allCrews[supplementalCrewIndex % allCrews.Count];
+                supplementalCrewIndex++;
+
+                supplementalCrews.Add(crewToSitOut);
+                crewSitOutHistory[crewToSitOut]++;
+                allCrews.Remove(crewToSitOut);
+            }
+
+            List<int> availableCrews = allCrews;
             Dictionary<int, List<int>> todaysAssignments = new();
+
             foreach (int zoneId in selectedZones)
             {
                 if (availableCrews.Count < 2) break;
@@ -316,37 +344,32 @@ namespace Parks_Route_Planner
                 availableCrews.Remove(chosenCrew[0]);
                 availableCrews.Remove(chosenCrew[1]);
             }
+            // Any crews left unassigned after zone pairing get marked supplemental
+            supplementalCrews.AddRange(availableCrews);
             previousDayPairings = todaysAssignments;
             return todaysAssignments;
         }
 
-        //Resets available parks to be full lists of parks once a cycle completes
+        // Resets available parks to be full lists of parks once a cycle completes
         internal void ResetCycle(DateTime newCycleStart)
         {
             cycleStartDate = newCycleStart;
             foreach (Zone zone in zones)
-            {
                 remainingParks[zone.ZoneId] = new List<Site>(zone.Parks);
-            }
+
             workingDaysUsed = 0;
             pendingZones.Clear();
             foreach (Zone zone in zones)
-            {
                 pendingZones.Add(zone.ZoneId);
-            }
         }
 
-        //Checks condition to see if all crews have visited every park at least once to stop generating a schedule
+        // Checks condition to see if all crews have visited every park at least once
         public bool IsGenerationComplete()
         {
             List<string> totalParkList = new();
             foreach (Zone zone in zones)
-            {
                 foreach (Site park in zone.Parks)
-                {
                     totalParkList.Add($"{zone.ZoneId}-{park.Park.Trim()}");
-                }
-            }
 
             if (totalParkList.Count == 0) return false;
 

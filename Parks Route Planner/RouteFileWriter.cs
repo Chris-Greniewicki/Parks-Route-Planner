@@ -12,7 +12,7 @@ namespace Parks_Route_Planner
             int cycleNumber = 0;
             HashSet<string> cycleParks = new();
 
-            // Build full park list from first cycle's assignments as reference
+            // Build full park list from all assignments as reference
             HashSet<string> allParks = schedule
                 .SelectMany(d => d.Assignments)
                 .SelectMany(a => a.AssignedParks ?? new())
@@ -51,6 +51,7 @@ namespace Parks_Route_Planner
 
                 writer.WriteLine("");
                 writer.WriteLine(DateTime.Parse(day.Date).ToString("dddd, MMMM dd yyyy"));
+
                 foreach (Assignment assignment in day.Assignments)
                 {
                     if (assignment.AssignedParks == null || assignment.AssignedParks.Count == 0)
@@ -58,6 +59,13 @@ namespace Parks_Route_Planner
                     writer.WriteLine($"  Zone {assignment.AssignedZone.ZoneId} — Crew {assignment.AssignedCrew}");
                     foreach (Site park in assignment.AssignedParks)
                         writer.WriteLine($"     - {park.Park}");
+                }
+
+                if (day.SupplementalCrews != null && day.SupplementalCrews.Count > 0)
+                {
+                    writer.WriteLine("");
+                    foreach (int crew in day.SupplementalCrews)
+                        writer.WriteLine($"  Crew {crew} — Supplemental Duties");
                 }
             }
 

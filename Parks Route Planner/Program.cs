@@ -39,6 +39,7 @@ if (boolResult)
 
     cycleStartDates.Add(cycleStartMonday);
 
+    // Run generation silently
     while (!process.IsGenerationComplete())
     {
         currentDate = currentDate.AddDays(1);
@@ -46,25 +47,45 @@ if (boolResult)
         if (!validWorkingDay)
             continue;
 
-        if (currentDate.DayOfWeek == DayOfWeek.Monday &&
-            (currentDate - cycleStartMonday).Days % 14 == 0 &&
-            currentDate != cycleStartMonday &&
-            process.remainingParks.Values.All(p => p.Count == 0))
+        if (process.remainingParks.Values.All(p => p.Count == 0))
         {
-            process.ResetCycle(currentDate);
-            cycleStartMonday = currentDate;
+            DateTime nextCycleStart = currentDate.AddDays(1);
+            while (nextCycleStart.DayOfWeek != DayOfWeek.Monday)
+                nextCycleStart = nextCycleStart.AddDays(1);
+
+            process.ResetCycle(nextCycleStart);
+            cycleStartMonday = nextCycleStart;
             cycleStartDates.Add(cycleStartMonday);
+            currentDate = nextCycleStart.AddDays(-1);
+            continue;
         }
 
         ScheduleDay validDay = process.ProcessDay(currentDate.ToString());
         schedule.Add(validDay);
     }
 
+    // Write the output file
     string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
     string outputFile = Path.Combine(desktopPath, $"Routes_{DateTime.Today:yyyy_MM_dd}.txt");
-
-    Console.WriteLine($"Generation complete! {schedule.Count} days scheduled.");
     RouteFileWriter.WriteRouteFile(schedule, cycleStartDates, outputFile);
+
+    // Validate constraints (results used by display)
+    var validator = new ConstraintValidator(schedule, cycleStartDates, result, zone);
+    List<string> violations = validator.Validate();
+
+    // Play theatrical generation display
+    int totalCycles = cycleStartDates.Count;
+    var display = new GenerationDisplay(schedule.Count, totalCycles, parkCount, crewCount, outputFile);
+    display.Play();
+
+    // Final output line after display
+    if (violations.Count > 0)
+    {
+        Console.WriteLine();
+        Console.WriteLine($"Note: {violations.Count} constraint violation(s) detected. Review output file.");
+    }
+
+    Console.WriteLine();
     Console.WriteLine($"File saved to: {outputFile}");
     Console.WriteLine();
     Console.WriteLine("Press any key to exit...");
