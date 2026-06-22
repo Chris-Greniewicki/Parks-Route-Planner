@@ -1,4 +1,4 @@
-# Parks & Recreation Mowing Route Scheduler
+# Parks & Recreation Park Route Scheduler
 ![Parks Route Scheduler Banner](https://raw.githubusercontent.com/Chris-Greniewicki/Parks-Route-Planner/master/lawton_parks_scheduler_banner_wide.png)
 ### City of Lawton, Oklahoma — Parks & Recreation Department
 
