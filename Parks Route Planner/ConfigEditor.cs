@@ -36,7 +36,8 @@ namespace Parks_Route_Planner
 
                 int totalParks = _config.Zones.Sum(z => z.Parks.Count);
                 AnsiConsole.MarkupLine($"[silver]Config loaded:[/] [white]{_config.Zones.Count} zones[/][silver],[/] [white]{totalParks} parks[/][silver],[/] [white]{_config.Crews} crews[/]");
-                AnsiConsole.MarkupLine($"[silver]Next mow event:[/] [white]{_config.NextMowEventDate}[/]");
+                AnsiConsole.MarkupLine($"[silver]Next mow event:[/] [white]{(string.IsNullOrWhiteSpace(_config.NextMowEventDate) ? "Not set" : _config.NextMowEventDate)}[/]");
+                AnsiConsole.MarkupLine($"[silver]Schedule start date:[/] [white]{(string.IsNullOrWhiteSpace(_config.StartDate) ? "Not set" : _config.StartDate)}[/]");
                 AnsiConsole.WriteLine();
 
                 var choice = AnsiConsole.Prompt(
@@ -48,12 +49,16 @@ namespace Parks_Route_Planner
                             "Manage Zones & Parks",
                             "Change Number of Crews",
                             "Change Mow Event Date",
+                            "Change Start Date",
                             "About & Features",
                             "Exit"));
 
                 switch (choice)
                 {
                     case "Generate Schedule":
+                        // Validate start date before generating
+                        if (!TryGetValidStartDate())
+                            continue;
                         return _config;
 
                     case "Manage Zones & Parks":
@@ -68,6 +73,10 @@ namespace Parks_Route_Planner
                         ChangeMowEventDate();
                         break;
 
+                    case "Change Start Date":
+                        ChangeStartDate();
+                        break;
+
                     case "About & Features":
                         FeaturesDisplay.Show();
                         break;
@@ -79,6 +88,37 @@ namespace Parks_Route_Planner
                         break;
                 }
             }
+        }
+
+        // ─────────────────────────────────────────────
+        //  Validate start date before generation
+        //  Returns true if valid and ready to go
+        //  Returns false if user needs to set/fix it
+        // ─────────────────────────────────────────────
+        private bool TryGetValidStartDate()
+        {
+            // Case 1: not set at all
+            if (string.IsNullOrWhiteSpace(_config.StartDate))
+            {
+                AnsiConsole.Clear();
+                DrawHeader();
+                ShowError("No start date has been set. Please set a start date before generating a schedule.");
+                ChangeStartDate();
+                return false;
+            }
+
+            // Case 2: set but outdated
+            if (DateTime.TryParse(_config.StartDate, out DateTime parsed) && parsed.Date < DateTime.Today)
+            {
+                AnsiConsole.Clear();
+                DrawHeader();
+                ShowError($"The start date {parsed:MMMM d, yyyy} is in the past and cannot be used. Please set a new start date.");
+                ChangeStartDate();
+                return false;
+            }
+
+            // Case 3: valid
+            return true;
         }
 
         // ─────────────────────────────────────────────
@@ -351,35 +391,48 @@ namespace Parks_Route_Planner
             if (selected == "Back") return;
 
             Site park = zone.Parks.First(p => p.Park == selected);
-            EditParkFields(zone, park);
+            bool moved = EditParkFields(zone, park);
+
+            // If park was moved to another zone, return to zone list
+            if (moved) return;
         }
 
         // ─────────────────────────────────────────────
         //  Edit individual fields of a park
+        //  Returns true if the park was moved to another zone
         // ─────────────────────────────────────────────
-        private void EditParkFields(Zone zone, Site park)
+        private bool EditParkFields(Zone zone, Site park)
         {
             while (true)
             {
                 AnsiConsole.Clear();
                 DrawHeader();
-                AnsiConsole.MarkupLine($"[steelblue1]Editing:[/] [white]{park.Park}[/]");
+                AnsiConsole.MarkupLine($"[steelblue1]Editing:[/] [white]{park.Park}[/] [silver](Zone {zone.ZoneId})[/]");
                 AnsiConsole.MarkupLine("[silver]Press Enter with a blank field to cancel any change and go back.[/]");
                 AnsiConsole.WriteLine();
 
                 string largeLabel = park.isLarge ? "[red]Yes — needs two crews[/]" : "[silver]No — one crew[/]";
 
+                var choices = new List<string>
+                {
+                    $"Park name       [silver](currently:[/] [white]{park.Park}[/][silver])[/]",
+                    $"Address         [silver](currently:[/] [white]{park.Address}[/][silver])[/]",
+                    $"Needs two crews [silver](currently:[/] {largeLabel}[silver])[/]"
+                };
+
+                // Only show move option if there are other zones to move to
+                if (_config.Zones.Count > 1)
+                    choices.Add("Move to a different zone");
+
+                choices.Add("Back");
+
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[white]Which part do you want to change?[/]")
                         .HighlightStyle(new Style(Color.Red))
-                        .AddChoices(
-                            $"Park name       [silver](currently:[/] [white]{park.Park}[/][silver])[/]",
-                            $"Address         [silver](currently:[/] [white]{park.Address}[/][silver])[/]",
-                            $"Needs two crews [silver](currently:[/] {largeLabel}[silver])[/]",
-                            "Back"));
+                        .AddChoices(choices));
 
-                if (choice == "Back") return;
+                if (choice == "Back") return false;
 
                 if (choice.StartsWith("Park name"))
                 {
@@ -451,6 +504,57 @@ namespace Parks_Route_Planner
                     park.isLarge = largeChoice.StartsWith("Yes");
                     SaveConfig();
                     ShowSaved($"{park.Park} is now marked as: {(park.isLarge ? "large — needs two crews" : "standard — one crew")}");
+                }
+                else if (choice.StartsWith("Move to a different zone"))
+                {
+                    AnsiConsole.Clear();
+                    DrawHeader();
+                    AnsiConsole.MarkupLine($"[steelblue1]Move {park.Park} to a Different Zone[/]");
+                    AnsiConsole.MarkupLine($"[silver]Currently in Zone {zone.ZoneId}. Pick the zone you want to move it to.[/]");
+                    AnsiConsole.WriteLine();
+
+                    var zoneChoices = _config.Zones
+                        .Where(z => z.ZoneId != zone.ZoneId)
+                        .Select(z => $"Zone {z.ZoneId}  ({z.Parks.Count} park{(z.Parks.Count == 1 ? "" : "s")})")
+                        .ToList();
+                    zoneChoices.Add("Cancel — go back without moving");
+
+                    string zoneChoice = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title("[white]Which zone do you want to move this park to?[/]")
+                            .HighlightStyle(new Style(Color.Red))
+                            .AddChoices(zoneChoices));
+
+                    if (zoneChoice.StartsWith("Cancel"))
+                    {
+                        ShowCancelled();
+                        continue;
+                    }
+
+                    int destinationId = int.Parse(zoneChoice.Split(' ')[1]);
+                    Zone destination = _config.Zones.First(z => z.ZoneId == destinationId);
+
+                    AnsiConsole.WriteLine();
+                    AnsiConsole.MarkupLine("[steelblue1]─────────────────────────────────────────[/]");
+                    AnsiConsole.MarkupLine($"[steelblue1]Moving:[/]  [white]{park.Park}[/]");
+                    AnsiConsole.MarkupLine($"[steelblue1]From:[/]    [white]Zone {zone.ZoneId}[/]");
+                    AnsiConsole.MarkupLine($"[steelblue1]To:[/]      [white]Zone {destinationId}[/]");
+                    AnsiConsole.MarkupLine("[steelblue1]─────────────────────────────────────────[/]");
+                    AnsiConsole.WriteLine();
+
+                    bool confirm = AnsiConsole.Confirm("Move this park?");
+                    if (!confirm)
+                    {
+                        ShowCancelled();
+                        continue;
+                    }
+
+                    // Perform the move
+                    zone.Parks.Remove(park);
+                    destination.Parks.Add(park);
+                    SaveConfig();
+                    ShowSaved($"{park.Park} has been successfully moved to Zone {destinationId}.");
+                    return true; // Signal that park was moved — exit edit loop and zone menu
                 }
             }
         }
@@ -604,7 +708,7 @@ namespace Parks_Route_Planner
             AnsiConsole.WriteLine();
 
             AnsiConsole.Write(new Panel(
-                $"[silver]This is the date of the first Wednesday when crews attend the city mow event\ninstead of mowing parks. The schedule will skip this Wednesday and every\nother Wednesday after it automatically.\n\nCurrently set to:[/] [white]{_config.NextMowEventDate}[/]")
+                $"[silver]This is the date of the first Wednesday when crews attend the city mow event\ninstead of mowing parks. The schedule will skip this Wednesday and every\nother Wednesday after it automatically.\n\nCurrently set to:[/] [white]{(string.IsNullOrWhiteSpace(_config.NextMowEventDate) ? "Not set" : _config.NextMowEventDate)}[/]")
                 .Header("[steelblue1] Mow Event Date [/]")
                 .BorderColor(Color.SteelBlue1));
 
@@ -636,19 +740,64 @@ namespace Parks_Route_Planner
                 return;
             }
 
-            if (raw == _config.NextMowEventDate)
-            {
-                AnsiConsole.WriteLine();
-                AnsiConsole.MarkupLine($"[silver]No change — mow event date stays at[/] [white]{_config.NextMowEventDate}[/][silver].[/]");
-                AnsiConsole.WriteLine();
-                AnsiConsole.MarkupLine("[silver]Press any key to go back...[/]");
-                Console.ReadKey(true);
-                return;
-            }
-
             _config.NextMowEventDate = raw;
             SaveConfig();
             ShowSaved($"Mow event date updated to {raw}.");
+        }
+
+        // ─────────────────────────────────────────────
+        //  Change start date
+        // ─────────────────────────────────────────────
+        private void ChangeStartDate()
+        {
+            AnsiConsole.Clear();
+            DrawHeader();
+            AnsiConsole.MarkupLine("[steelblue1]Change Schedule Start Date[/]");
+            AnsiConsole.MarkupLine("[silver]Press Enter with a blank field to cancel and go back.[/]");
+            AnsiConsole.WriteLine();
+
+            AnsiConsole.Write(new Panel(
+                $"[silver]This is the Monday that the schedule generation will begin from.\nThe date must be today or in the future, and must fall on a Monday.\n\nCurrently set to:[/] [white]{(string.IsNullOrWhiteSpace(_config.StartDate) ? "Not set" : _config.StartDate)}[/]")
+                .Header("[steelblue1] Schedule Start Date [/]")
+                .BorderColor(Color.SteelBlue1));
+
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine("[silver]Type the date in this format: [/][white]M-D-YYYY[/]");
+            AnsiConsole.MarkupLine("[silver]Example:[/] [white]6-23-2026[/]");
+            AnsiConsole.MarkupLine("[silver]The date must be a Monday and cannot be in the past. Leave blank to cancel.[/]");
+            AnsiConsole.WriteLine();
+
+            string raw = AnsiConsole.Prompt(
+                new TextPrompt<string>("[white]Start date (or leave blank to cancel):[/]")
+                    .AllowEmpty());
+
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                ShowCancelled();
+                return;
+            }
+
+            if (!DateTime.TryParse(raw, out DateTime parsed))
+            {
+                ShowError("That doesn't look like a valid date. Use M-D-YYYY format, like 6-23-2026. Nothing was changed.");
+                return;
+            }
+
+            if (parsed.DayOfWeek != DayOfWeek.Monday)
+            {
+                ShowError($"{parsed:MMMM d, yyyy} is a {parsed.DayOfWeek}. The start date must be a Monday. Nothing was changed.");
+                return;
+            }
+
+            if (parsed.Date < DateTime.Today)
+            {
+                ShowError($"{parsed:MMMM d, yyyy} is in the past. The start date must be today or a future Monday. Nothing was changed.");
+                return;
+            }
+
+            _config.StartDate = raw;
+            SaveConfig();
+            ShowSaved($"Schedule start date set to {raw}.");
         }
 
         // ─────────────────────────────────────────────

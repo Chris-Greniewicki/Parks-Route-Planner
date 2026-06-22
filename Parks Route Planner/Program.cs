@@ -3,47 +3,35 @@ using System;
 using System.IO;
 using System.Text.Json;
 
-//locate config.json file
-string filePath = Path.Combine(Directory.GetParent(AppContext.BaseDirectory).Parent.Parent.Parent.FullName, "config.json");
-
-//Read and store json file
+string filePath = Path.Combine(AppContext.BaseDirectory, "config.json");
 string jsonString = File.ReadAllText(filePath);
-
-//Deserialize json file
 Config config = JsonSerializer.Deserialize<Config>(jsonString);
 
-//Launch config editor UI
 var editor = new ConfigEditor(config, filePath);
 config = editor.Run();
 
-//Count parks across zones
 int parkCount = config.Zones.Sum(Zone => Zone.Parks.Count);
 
-//Run schedule generation
-DateTime startDate = DateTime.Today;
 string nextMowEventDate = config.NextMowEventDate;
 List<Zone> zone = config.Zones;
 int crewCount = config.Crews;
-bool boolResult = DateTime.TryParse(nextMowEventDate, out DateTime result);
 
-if (boolResult)
+bool mowDateValid = DateTime.TryParse(nextMowEventDate, out DateTime mowEventDate);
+bool startDateValid = DateTime.TryParse(config.StartDate, out DateTime startDate);
+
+if (mowDateValid && startDateValid)
 {
     List<ScheduleDay> schedule = new();
     List<DateTime> cycleStartDates = new();
-    Scheduler process = new Scheduler(zone, crewCount, startDate, result);
+    Scheduler process = new Scheduler(zone, crewCount, startDate, mowEventDate);
     DateTime currentDate = startDate;
 
-    DateTime cycleStartMonday = startDate;
-    while (cycleStartMonday.DayOfWeek != DayOfWeek.Monday)
-        cycleStartMonday = cycleStartMonday.AddDays(1);
+    cycleStartDates.Add(startDate);
 
-    cycleStartDates.Add(cycleStartMonday);
-
-    // Run generation silently
     while (!process.IsGenerationComplete())
     {
         currentDate = currentDate.AddDays(1);
-        bool validWorkingDay = CalendarBuilder.isValidWorkingDay(currentDate, result);
+        bool validWorkingDay = CalendarBuilder.isValidWorkingDay(currentDate, mowEventDate);
         if (!validWorkingDay)
             continue;
 
@@ -54,8 +42,7 @@ if (boolResult)
                 nextCycleStart = nextCycleStart.AddDays(1);
 
             process.ResetCycle(nextCycleStart);
-            cycleStartMonday = nextCycleStart;
-            cycleStartDates.Add(cycleStartMonday);
+            cycleStartDates.Add(nextCycleStart);
             currentDate = nextCycleStart.AddDays(-1);
             continue;
         }
@@ -64,21 +51,16 @@ if (boolResult)
         schedule.Add(validDay);
     }
 
-    // Write the output file
     string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
     string outputFile = Path.Combine(desktopPath, $"Routes_{DateTime.Today:yyyy_MM_dd}.txt");
     RouteFileWriter.WriteRouteFile(schedule, cycleStartDates, outputFile);
 
-    // Validate constraints (results used by display)
-    var validator = new ConstraintValidator(schedule, cycleStartDates, result, zone);
+    var validator = new ConstraintValidator(schedule, cycleStartDates, mowEventDate, zone);
     List<string> violations = validator.Validate();
 
-    // Play theatrical generation display
-    int totalCycles = cycleStartDates.Count;
-    var display = new GenerationDisplay(schedule.Count, totalCycles, parkCount, crewCount, outputFile);
+    var display = new GenerationDisplay(schedule.Count, cycleStartDates.Count, parkCount, crewCount, outputFile);
     display.Play();
 
-    // Final output line after display
     if (violations.Count > 0)
     {
         Console.WriteLine();
@@ -93,6 +75,6 @@ if (boolResult)
 }
 else
 {
-    Console.WriteLine("Next Mow Event Date not entered properly.");
+    Console.WriteLine("Configuration is incomplete. Please set all required dates before generating.");
     Console.ReadKey(true);
 }

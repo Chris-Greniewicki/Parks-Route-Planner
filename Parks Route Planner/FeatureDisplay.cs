@@ -74,6 +74,8 @@ namespace Parks_Route_Planner
                     "[red]*[/] [white]Built-in config editor[/] [silver]-- manage zones, parks, crew count, and mow event date without touching any files[/]\n" +
                     "[red]*[/] [white]Instant saves[/] [silver]-- every change writes to config.json immediately, no save button needed[/]\n" +
                     "[red]*[/] [white]Full park management[/] [silver]-- add, edit, or remove parks and zones at any time with guided prompts[/]\n" +
+                    "[red]*[/] [white]Park zone transfer[/] [silver]-- move any park to a different zone at any time directly from the park editor[/]\n" +
+                    "[red]*[/] [white]Start date control[/] [silver]-- set the exact Monday you want schedule generation to begin from, with automatic validation to prevent outdated dates[/]\n" +
                     "[red]*[/] [white]Desktop output[/] [silver]-- the finished route file is saved directly to the desktop, named with today's date[/]\n" +
                     "[red]*[/] [white]Readable route format[/] [silver]-- output is organized by cycle and day, showing zones, crews, and park lists clearly[/]\n" +
                     "[red]*[/] [white]Automatic constraint validation[/] [silver]-- every rule is checked after generation and violations are reported before the file is saved[/]\n" +
@@ -88,7 +90,8 @@ namespace Parks_Route_Planner
             WritePanel(width, new Panel(
                 new Markup(
                     "[silver]Developed by[/]  [white]Christopher Greniewicki[/]\n" +
-                    "[silver]Built for[/]     [white]City of Lawton -- Parks & Recreation Department[/]"))
+                    "[silver]Built for[/]     [white]City of Lawton -- Parks & Recreation Department[/]\n" +
+                    "[silver]Released[/]      [white]June 20, 2026[/]"))
                 .Header("[red] Developer [/]")
                 .BorderColor(Color.Red)
                 .Padding(1, 1));
