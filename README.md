@@ -1,4 +1,5 @@
 # Parks & Recreation Mowing Route Scheduler
+![Parks Route Scheduler Banner](assets/banner.png)
 ### City of Lawton, Oklahoma — Parks & Recreation Department
 
 A purpose-built scheduling tool that automatically generates optimized mowing route 
