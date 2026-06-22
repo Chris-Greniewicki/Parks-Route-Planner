@@ -822,7 +822,7 @@ namespace Parks_Route_Planner
                 new FigletText("Lawton")
                     .LeftJustified()
                     .Color(Color.Red));
-            AnsiConsole.MarkupLine("[steelblue1]Parks & Recreation[/] [silver]—[/] [white]Mowing Route Scheduler[/]");
+            AnsiConsole.MarkupLine("[steelblue1]Parks & Recreation[/] [silver]—[/] [white]Park Route Scheduler[/]");
             AnsiConsole.MarkupLine("[steelblue1]────────────────────────────────────────────────────[/]");
             AnsiConsole.WriteLine();
         }
