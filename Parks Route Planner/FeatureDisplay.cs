@@ -15,7 +15,7 @@ namespace Parks_Route_Planner
             // ── Top description panel ─────────────────────────────────────
             WritePanel(width, new Panel(
                 new Markup(
-                    "[white]A fully automated mowing route scheduler for the City of Lawton Parks & Recreation department.[/]\n" +
+                    "[white]A fully automated park route scheduler for the City of Lawton Parks & Recreation department.[/]\n" +
                     "[silver]Generates complete crew assignments across all zones and parks, respects operational rules,\n" +
                     "tracks coverage across cycles, and produces a ready-to-use route file -- all from a simple config.[/]"))
                 .Header("[steelblue1] About This Program [/]")
@@ -119,7 +119,7 @@ namespace Parks_Route_Planner
                 new FigletText("Lawton")
                     .LeftJustified()
                     .Color(Color.Red));
-            AnsiConsole.MarkupLine("[steelblue1]Parks & Recreation[/] [silver]--[/] [white]Mowing Route Scheduler[/]");
+            AnsiConsole.MarkupLine("[steelblue1]Parks & Recreation[/] [silver]--[/] [white]Park Route Scheduler[/]");
             AnsiConsole.MarkupLine("[steelblue1]────────────────────────────────────────────────────[/]");
             AnsiConsole.WriteLine();
         }
