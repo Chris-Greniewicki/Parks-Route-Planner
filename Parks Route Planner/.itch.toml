@@ -1,4 +1,4 @@
 [[actions]]
 name = "Parks Route Planner"
-path = "parksrouteplanner.exe"
+path = "Launch.bat"
 console = true
